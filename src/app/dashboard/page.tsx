@@ -49,8 +49,10 @@ export default function DashboardPage() {
               <p className="text-muted-foreground mb-6">
                 Forecast future ocean conditions using AI models and machine learning algorithms
               </p>
-              <Button disabled variant="secondary">
-                Join Workspace →
+               <Button asChild>
+                <Link href="/dashboard/predictive">
+                  Join Workspace →
+                </Link>
               </Button>
             </div>
           </Card>
