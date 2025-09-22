@@ -8,7 +8,7 @@ const tutorials = [
   {
     id: 'tutorial-1',
     title: 'Comparing Salinity Profiles',
-    description: 'Learn to load two ARGO floats, generate overlaid depth profiles, and interpret halocline features using FloatChat.',
+    description: 'Learn to load two ARGO floats, generate overlaid depth profiles, and interpret halocline features using Argonaut.',
     type: 'guide',
     image: 'https://picsum.photos/seed/tutorial1/800/600',
     imageHint: 'ocean profile chart',
@@ -32,7 +32,7 @@ const tutorials = [
     {
     id: 'tutorial-4',
     title: 'Automating with the API',
-    description: 'Explore a Jupyter Notebook demonstrating data ingestion and visualization using the FloatChat API.',
+    description: 'Explore a Jupyter Notebook demonstrating data ingestion and visualization using the Argonaut API.',
     type: 'notebook',
     image: 'https://picsum.photos/seed/tutorial4/800/600',
     imageHint: 'code script',
@@ -53,7 +53,7 @@ export default function TutorialsPage() {
           Tutorials & Use Cases
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Step-by-step guides and examples to help you master ocean data analysis with Oceanus AI.
+          Step-by-step guides and examples to help you master ocean data analysis with Blue Query.
         </p>
       </div>
 

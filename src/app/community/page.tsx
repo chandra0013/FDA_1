@@ -16,7 +16,7 @@ const communityLinks = [
     title: 'Issue Tracker',
     description: 'Found a bug or have a feature idea? Report it on our GitHub issue tracker to help us improve.',
     href: '#',
-    cta: 'View on GitHub',
+cta: 'View on GitHub',
   },
   {
     icon: <LifeBuoy className="w-12 h-12 text-accent" />,
@@ -42,7 +42,7 @@ export default function CommunityPage() {
           Community & Support
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Connect with the community, get help, and contribute to the future of Oceanus AI.
+          Connect with the community, get help, and contribute to the future of Blue Query.
         </p>
       </div>
 

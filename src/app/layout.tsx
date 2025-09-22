@@ -6,7 +6,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
-  title: 'Oceanus AI - AI-Powered Ocean Data Discovery',
+  title: 'Blue Query - AI-Powered Ocean Data Discovery',
   description:
     'An AI-powered conversational interface for ARGO Ocean Data Discovery and Visualization.',
 };

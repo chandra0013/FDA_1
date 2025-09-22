@@ -9,11 +9,11 @@ export function SiteFooter() {
           <Link href="/" className="flex items-center space-x-2">
             <AppIcon className="h-6 w-6 text-primary" />
             <span className="font-bold">
-              Oceanus AI
+              Blue Query
             </span>
           </Link>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Oceanus AI. All rights reserved.
+            © {new Date().getFullYear()} Blue Query. All rights reserved.
           </p>
         </div>
         <div className="flex gap-4">

@@ -33,7 +33,7 @@ export function AboutSection() {
             Discover the Depths
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Oceanus AI transforms how we interact with ocean data, turning complex datasets into clear, actionable knowledge.
+            Blue Query transforms how we interact with ocean data, turning complex datasets into clear, actionable knowledge.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

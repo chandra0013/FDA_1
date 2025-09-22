@@ -107,7 +107,7 @@ export function DashboardChat({ mode, context }: DashboardChatProps) {
             onInteractOutside={(e) => e.preventDefault()}
         >
           <SheetHeader className="p-4 border-b border-border">
-            <SheetTitle>FloatChat Assistant</SheetTitle>
+            <SheetTitle>Argonaut Assistant</SheetTitle>
             <SheetDescription>{modeHints[mode]}</SheetDescription>
           </SheetHeader>
 

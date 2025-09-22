@@ -65,7 +65,7 @@ const generateDataInsightsReportPrompt = ai.definePrompt({
   2.  **Synthesize a Report**: Create a comprehensive, well-structured, and professional-looking report in PDF format.
   3.  **Bluff Realistic Details**: Since you do not have live data access, you must create realistic-looking data, statistics, and findings. For a query about "temperature anomalies," invent plausible statistics for mean anomaly, trends, specific noteworthy events, and regional differences.
   4.  **Structure the Report**: The PDF should have a clear structure, including:
-      *   A title page with "Oceanus AI Report" and the user's query.
+      *   A title page with "Blue Query Report" and the user's query.
       *   An executive summary with key bullet points.
       *   Sections for Methodology, Findings, Spatial Analysis, Temporal Trends, and a Conclusion.
       *   Use professional formatting with clear headings, paragraphs, bulleted lists, and tables for data.

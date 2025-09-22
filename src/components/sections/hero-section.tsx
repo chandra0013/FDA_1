@@ -35,7 +35,7 @@ export function HeroSection() {
         {/* Title + Tagline grouped */}
         <div className="flex flex-col items-center space-y-2">
           <ShinyText className="text-6xl font-bold md:text-8xl from-primary to-foreground">
-            Oceanus AI
+            Blue Query
           </ShinyText>
           <BlurText
             text="Ocean Intelligence, Conversation by design"
@@ -53,7 +53,7 @@ export function HeroSection() {
             className="text-lg px-10 py-6 shadow-[0_0_20px_hsl(var(--accent))] hover:shadow-[0_0_30px_hsl(var(--accent))] transition-shadow"
           >
             <Link href="/discover">
-              Explore FloatChat
+              Explore Argonaut
               <ArrowRight className="ml-2 h-6 w-6" />
             </Link>
           </Button>

@@ -91,7 +91,7 @@ export function ChatInterface() {
         if (result.reportDataUri) {
           const link = document.createElement('a');
           link.href = result.reportDataUri;
-          link.download = 'oceanus_ai_report.pdf';
+          link.download = 'blue_query_report.pdf';
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -161,7 +161,7 @@ export function ChatInterface() {
           {messages.length === 0 && (
             <div className="text-center p-8">
                <Bot className="mx-auto h-12 w-12 text-primary mb-4" />
-              <h3 className="text-lg font-semibold">Welcome to Oceanus AI</h3>
+              <h3 className="text-lg font-semibold">Welcome to Argonaut</h3>
               <p className="text-muted-foreground text-sm">
                 Ask me about ocean data or try a sample query.
               </p>
