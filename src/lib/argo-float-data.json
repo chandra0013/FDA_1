@@ -1,0 +1,74 @@
+{
+  "argoFloats": [
+    {
+      "id": "AD06",
+      "lat": 10.0,
+      "lng": 66.0,
+      "location": "Arabian Sea, west of India",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "AD08",
+      "lat": 6.0,
+      "lng": 70.0,
+      "location": "Arabian Sea, SW of Kerala",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "AD10",
+      "lat": 8.5,
+      "lng": 76.0,
+      "location": "Off Kerala coast",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "CB02",
+      "lat": 9.0,
+      "lng": 75.5,
+      "location": "Near Calicut, Kerala coast",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "BD10",
+      "lat": 15.0,
+      "lng": 85.0,
+      "location": "Bay of Bengal, east of Andhra",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "BD11",
+      "lat": 12.5,
+      "lng": 84.0,
+      "location": "Bay of Bengal, SE of Chennai",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "BD12",
+      "lat": 11.0,
+      "lng": 93.0,
+      "location": "Andaman Sea, near Nicobar",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "BD13",
+      "lat": 14.0,
+      "lng": 87.0,
+      "location": "Central Bay of Bengal",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "BD14",
+      "lat": 8.0,
+      "lng": 88.0,
+      "location": "Southern Bay of Bengal",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "CB01",
+      "lat": 11.5,
+      "lng": 92.0,
+      "location": "Andaman Islands region",
+      "sea": "Bay of Bengal"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { Card, CardContent } from './ui/card';
 import {
   Layers,
@@ -10,9 +10,10 @@ import {
   Map as MapIcon,
   Satellite,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import argoFloatData from '@/lib/argo-float-data.json';
 
 const containerStyle = {
   width: '100%',
@@ -20,8 +21,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 20,
-  lng: -40,
+  lat: 11.0,
+  lng: 80.0,
 };
 
 const mapStyles = [
@@ -105,6 +106,14 @@ const mapStyles = [
   },
 ];
 
+type ArgoFloat = {
+  id: string;
+  lat: number;
+  lng: number;
+  location: string;
+  sea: 'Arabian Sea' | 'Bay of Bengal';
+};
+
 export function MapVisualization() {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
@@ -112,14 +121,31 @@ export function MapVisualization() {
   });
 
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
+  const [activeMarker, setActiveMarker] = useState<ArgoFloat | null>(null);
+  const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
 
-  const argoFloats = [
-    { lat: 15.2, lng: 89.8 },
-    { lat: 25, lng: -71 },
-    { lat: -34, lng: 18 },
-    { lat: 59, lng: -8 },
-    { lat: -55, lng: 150 },
-  ];
+  const argoFloats: ArgoFloat[] = argoFloatData.argoFloats as ArgoFloat[];
+
+  const handleMarkerMouseOver = useCallback((marker: ArgoFloat) => {
+    setActiveMarker(marker);
+    setHoveredMarkerId(marker.id);
+  }, []);
+
+  const handleMarkerMouseOut = useCallback(() => {
+    setActiveMarker(null);
+    setHoveredMarkerId(null);
+  }, []);
+
+  const getMarkerIcon = (sea: string, id: string) => {
+    const isHovered = hoveredMarkerId === id;
+    return {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: isHovered ? 10 : 7,
+      fillColor: sea === 'Arabian Sea' ? '#4DB6AC' : '#FFB74D',
+      fillOpacity: 1,
+      strokeWeight: 0,
+    };
+  };
 
   const renderMap = () => {
     if (loadError) {
@@ -136,7 +162,7 @@ export function MapVisualization() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={3}
+        zoom={5}
         mapTypeId={mapType}
         options={{
           styles: mapType === 'roadmap' ? mapStyles : undefined,
@@ -144,19 +170,31 @@ export function MapVisualization() {
           zoomControl: true,
         }}
       >
-        {argoFloats.map((float, index) => (
+        {argoFloats.map((float) => (
           <Marker
-            key={index}
-            position={float}
-            icon={{
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 5,
-              fillColor: '#4DB6AC',
-              fillOpacity: 0.8,
-              strokeWeight: 0,
-            }}
+            key={float.id}
+            position={{ lat: float.lat, lng: float.lng }}
+            icon={getMarkerIcon(float.sea, float.id)}
+            onMouseOver={() => handleMarkerMouseOver(float)}
+            onMouseOut={handleMarkerMouseOut}
+            animation={google.maps.Animation.DROP}
           />
         ))}
+
+        {activeMarker && (
+          <InfoWindow
+            position={{ lat: activeMarker.lat + 0.5, lng: activeMarker.lng }}
+            onCloseClick={handleMarkerMouseOut}
+          >
+            <div className="p-2 bg-background text-foreground rounded-lg shadow-lg glassmorphism">
+              <h4 className="font-bold text-sm text-primary">{activeMarker.id}</h4>
+              <p className="text-xs text-muted-foreground">{activeMarker.location}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {activeMarker.lat.toFixed(2)}°N, {activeMarker.lng.toFixed(2)}°E
+              </p>
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     );
   };
@@ -187,7 +225,7 @@ export function MapVisualization() {
                 size="sm"
                 variant={mapType === 'roadmap' ? 'secondary' : 'ghost'}
                 onClick={() => setMapType('roadmap')}
-                className={cn('flex-1', mapType === 'roadmap' && "bg-primary/20")}
+                className={cn('flex-1', mapType === 'roadmap' && 'bg-primary/20')}
               >
                 <MapIcon className="mr-2 h-4 w-4" />
                 Map
@@ -196,7 +234,7 @@ export function MapVisualization() {
                 size="sm"
                 variant={mapType === 'satellite' ? 'secondary' : 'ghost'}
                 onClick={() => setMapType('satellite')}
-                className={cn('flex-1', mapType === 'satellite' && "bg-primary/20")}
+                className={cn('flex-1', mapType === 'satellite' && 'bg-primary/20')}
               >
                 <Satellite className="mr-2 h-4 w-4" />
                 Satellite
