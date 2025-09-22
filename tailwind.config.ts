@@ -8,10 +8,17 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['"Space Grotesk"', 'sans-serif'],
+        headline: ['"Space Grotesk"', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -88,10 +95,26 @@ export default {
             height: '0',
           },
         },
+        'shine': {
+          'from': { backgroundPosition: '200% 0' },
+          'to': { backgroundPosition: '-200% 0' },
+        },
+        'blur': {
+          'from': { filter: 'blur(10px)', opacity: '0' },
+          'to': { filter: 'blur(0)', opacity: '1' },
+        },
+        'border-spin': {
+          '100%': {
+            transform: 'rotate(360deg)',
+          }
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'shine': 'shine 4s linear infinite',
+        'blur': 'blur 0.5s ease-out forwards',
+        'border-spin': 'border-spin 7s linear infinite',
       },
     },
   },

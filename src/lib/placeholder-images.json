@@ -1,3 +1,65 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "An abstract visualization of ocean currents and data points.",
+      "imageUrl": "https://picsum.photos/seed/oceanus-hero/1920/1080",
+      "imageHint": "ocean data"
+    },
+    {
+      "id": "about-card-1",
+      "description": "An ARGO float being deployed into the ocean.",
+      "imageUrl": "https://picsum.photos/seed/argo-deploy/600/800",
+      "imageHint": "ocean float"
+    },
+    {
+      "id": "about-card-2",
+      "description": "A satellite view of the earth showing ocean temperatures.",
+      "imageUrl": "https://picsum.photos/seed/ocean-temp/600/800",
+      "imageHint": "ocean temperature"
+    },
+    {
+      "id": "about-card-3",
+      "description": "A scientist analyzing data on a computer screen.",
+      "imageUrl": "https://picsum.photos/seed/ocean-analysis/600/800",
+      "imageHint": "data analysis"
+    },
+    {
+      "id": "sample-chart-1",
+      "description": "A line graph showing ocean salinity over time.",
+      "imageUrl": "https://picsum.photos/seed/salinity-chart/800/600",
+      "imageHint": "data chart"
+    },
+    {
+      "id": "sample-chart-2",
+      "description": "A depth profile chart for ocean temperature.",
+      "imageUrl": "https://picsum.photos/seed/temp-profile/800/600",
+      "imageHint": "profile chart"
+    },
+    {
+      "id": "sample-chart-3",
+      "description": "A bar chart comparing BGC parameters in different regions.",
+      "imageUrl": "https://picsum.photos/seed/bgc-chart/800/600",
+      "imageHint": "bar chart"
+    },
+    {
+      "id": "map-visualization",
+      "description": "A world map with glowing dots indicating ARGO float locations.",
+      "imageUrl": "https://picsum.photos/seed/world-map/1200/1200",
+      "imageHint": "world map"
+    },
+    {
+      "id": "learn-infographic-1",
+      "description": "An infographic explaining how an ARGO float works.",
+      "imageUrl": "https://picsum.photos/seed/argo-works/800/600",
+      "imageHint": "infographic diagram"
+    },
+    {
+      "id": "learn-infographic-2",
+      "description": "A diagram showing the different sensors on an ARGO float.",
+      "imageUrl": "https://picsum.photos/seed/argo-sensors/800/600",
+      "imageHint": "technical diagram"
+    }
+  ]
 }
