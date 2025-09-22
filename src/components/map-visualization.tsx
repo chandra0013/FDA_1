@@ -9,11 +9,15 @@ import {
   Loader2,
   Map as MapIcon,
   Satellite,
+  Upload,
 } from 'lucide-react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
-import argoFloatData from '@/lib/argo-float-data.json';
+import initialArgoFloatData from '@/lib/argo-float-data.json';
+import Papa from 'papaparse';
+import { useToast } from '@/hooks/use-toast';
+
 
 const containerStyle = {
   width: '100%',
@@ -111,7 +115,7 @@ type ArgoFloat = {
   lat: number;
   lng: number;
   location: string;
-  sea: 'Arabian Sea' | 'Bay of Bengal';
+  sea: 'Arabian Sea' | 'Bay of Bengal' | string;
 };
 
 export function MapVisualization() {
@@ -123,8 +127,67 @@ export function MapVisualization() {
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [activeMarker, setActiveMarker] = useState<ArgoFloat | null>(null);
   const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
+  const [argoFloats, setArgoFloats] = useState<ArgoFloat[]>(initialArgoFloatData.argoFloats as ArgoFloat[]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
-  const argoFloats: ArgoFloat[] = argoFloatData.argoFloats as ArgoFloat[];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          try {
+            const parsedData = (results.data as any[]).map(row => {
+              const lat = parseFloat(row.Latitude || row.lat);
+              const lng = parseFloat(row.Longitude || row.lng);
+
+              if (isNaN(lat) || isNaN(lng)) {
+                throw new Error(`Invalid coordinate data for float: ${row.Float_ID || row.id}`);
+              }
+
+              const sea = row.sea || (row.Location_Reference?.toLowerCase().includes('arabian') ? 'Arabian Sea' : 'Bay of Bengal');
+
+              return {
+                id: row.Float_ID || row.id,
+                lat: lat,
+                lng: lng,
+                location: row.Location_Reference || row.location,
+                sea: sea
+              };
+            });
+            setArgoFloats(parsedData);
+            toast({
+              title: "CSV Uploaded",
+              description: `${parsedData.length} floats loaded onto the map.`,
+            });
+          } catch(error: any) {
+            toast({
+              title: "CSV Parsing Error",
+              description: error.message || "Could not parse the CSV file. Please check the format.",
+              variant: "destructive",
+            });
+          }
+        },
+        error: (error: any) => {
+          toast({
+            title: "File Read Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
+      });
+    }
+     // Reset file input to allow re-uploading the same file
+    if(fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleMarkerMouseOver = useCallback((marker: ArgoFloat) => {
     setActiveMarker(marker);
@@ -138,10 +201,12 @@ export function MapVisualization() {
 
   const getMarkerIcon = (sea: string, id: string) => {
     const isHovered = hoveredMarkerId === id;
+    const isArabianSea = sea?.toLowerCase().includes('arabian');
+    
     return {
       path: google.maps.SymbolPath.CIRCLE,
       scale: isHovered ? 10 : 7,
-      fillColor: sea === 'Arabian Sea' ? '#4DB6AC' : '#FFB74D',
+      fillColor: isArabianSea ? '#4DB6AC' : '#FFB74D',
       fillOpacity: 1,
       strokeWeight: 0,
     };
@@ -220,25 +285,38 @@ export function MapVisualization() {
                 <span>Salinity</span>
               </div>
             </div>
-            <div className="mt-4 flex gap-2">
-              <Button
-                size="sm"
-                variant={mapType === 'roadmap' ? 'secondary' : 'ghost'}
-                onClick={() => setMapType('roadmap')}
-                className={cn('flex-1', mapType === 'roadmap' && 'bg-primary/20')}
-              >
-                <MapIcon className="mr-2 h-4 w-4" />
-                Map
+            <div className="mt-4 flex flex-col gap-2">
+               <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                className="hidden"
+                accept=".csv"
+              />
+              <Button size="sm" variant="outline" onClick={triggerFileUpload}>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload CSV
               </Button>
-              <Button
-                size="sm"
-                variant={mapType === 'satellite' ? 'secondary' : 'ghost'}
-                onClick={() => setMapType('satellite')}
-                className={cn('flex-1', mapType === 'satellite' && 'bg-primary/20')}
-              >
-                <Satellite className="mr-2 h-4 w-4" />
-                Satellite
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={mapType === 'roadmap' ? 'secondary' : 'ghost'}
+                  onClick={() => setMapType('roadmap')}
+                  className={cn('flex-1', mapType === 'roadmap' && 'bg-primary/20')}
+                >
+                  <MapIcon className="mr-2 h-4 w-4" />
+                  Map
+                </Button>
+                <Button
+                  size="sm"
+                  variant={mapType === 'satellite' ? 'secondary' : 'ghost'}
+                  onClick={() => setMapType('satellite')}
+                  className={cn('flex-1', mapType === 'satellite' && 'bg-primary/20')}
+                >
+                  <Satellite className="mr-2 h-4 w-4" />
+                  Satellite
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
