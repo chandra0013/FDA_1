@@ -48,7 +48,7 @@ export function OceanHealthScatter({ data }: { data: any[] }) {
       <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
         <XAxis type="number" dataKey="temp" name="Temperature" unit="°C" domain={[26.5, 29.3]} stroke="hsl(var(--muted-foreground))" />
         <YAxis type="number" dataKey="nitrate" name="Nitrate" unit="µmol/kg" domain={[1.64, 2.08]} stroke="hsl(var(--muted-foreground))" />
-        <ZAxis type="number" dataKey="oxygen" range={[10, 400]} name="Oxygen" unit="mg/L" />
+        <ZAxis type="number" dataKey="oxygen" range={[10, 200]} name="Oxygen" unit="mg/L" />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
         <Legend />
         <Scatter name="Arabian Sea" data={arabianSeaData} fill="hsl(var(--chart-1))" shape="circle" />
@@ -307,3 +307,5 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
 }
 
 
+
+    
