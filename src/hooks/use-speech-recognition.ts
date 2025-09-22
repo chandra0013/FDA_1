@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface SpeechRecognitionOptions {
-  onSpeechEnd?: () => void;
+  onSpeechEnd?: (transcript: string) => void;
 }
 
 export function useSpeechRecognition(options: SpeechRecognitionOptions = {}) {
@@ -25,20 +25,19 @@ export function useSpeechRecognition(options: SpeechRecognitionOptions = {}) {
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       let finalTranscript = '';
+      let interimTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
         }
       }
-      setTranscript(finalTranscript);
+      setTranscript(finalTranscript || interimTranscript);
     };
 
     recognition.onend = () => {
       setIsListening(false);
-      if (options.onSpeechEnd) {
-        options.onSpeechEnd();
-      }
-      setTranscript('');
     };
     
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -47,22 +46,30 @@ export function useSpeechRecognition(options: SpeechRecognitionOptions = {}) {
     };
 
     recognitionRef.current = recognition;
-  }, [options.onSpeechEnd]);
+  }, []);
 
-  const startListening = () => {
+  const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
       setTranscript('');
       recognitionRef.current.start();
       setIsListening(true);
     }
-  };
+  }, [isListening]);
 
-  const stopListening = () => {
+  const stopListening = useCallback(() => {
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
       setIsListening(false);
+      // Use a short delay to allow the final result to be processed
+      setTimeout(() => {
+        if (options.onSpeechEnd) {
+          options.onSpeechEnd(transcript);
+        }
+        setTranscript('');
+      }, 100);
     }
-  };
+  }, [isListening, transcript, options]);
+
 
   return { isListening, transcript, startListening, stopListening };
 }

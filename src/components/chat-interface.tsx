@@ -40,10 +40,16 @@ export function ChatInterface() {
     startListening,
     stopListening,
   } = useSpeechRecognition({
-    onSpeechEnd: () => {
-      setInput(prev => prev + (transcript ? (prev ? ' ' : '') + transcript : ''));
+    onSpeechEnd: (finalTranscript) => {
+      setInput(prev => prev + (finalTranscript ? (prev ? ' ' : '') + finalTranscript : ''));
     }
   });
+
+  useEffect(() => {
+    if (isListening) {
+      setInput(transcript);
+    }
+  }, [transcript, isListening]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
