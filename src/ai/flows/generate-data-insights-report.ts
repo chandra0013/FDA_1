@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -45,7 +46,7 @@ const generateDataInsightsReportPrompt = ai.definePrompt({
   name: 'generateDataInsightsReportPrompt',
   input: {schema: GenerateDataInsightsReportInputSchema},
   output: {schema: GenerateDataInsightsReportOutputSchema},
-  model: 'googleai/gemini-pro',
+  model: 'googleai/gemini-1.5-pro-latest',
   prompt: `You are an AI assistant that generates reports based on user queries and visualizations.
 
   The user has made the following query: {{{query}}}

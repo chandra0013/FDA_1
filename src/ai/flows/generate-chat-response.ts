@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow for generating conversational responses
@@ -36,7 +37,7 @@ const generateChatResponsePrompt = ai.definePrompt({
   name: 'generateChatResponsePrompt',
   input: { schema: GenerateChatResponseInputSchema },
   output: { schema: GenerateChatResponseOutputSchema },
-  model: 'googleai/gemini-pro',
+  model: 'googleai/gemini-1.5-pro-latest',
   prompt: `You are Oceanus AI, a specialized AI assistant for oceanographic data exploration. Your purpose is to provide accurate, data-driven, and insightful answers to users inquiring about ARGO float data.
 
 You have access to a dataset with the following schema and value ranges. Use this information to formulate your answers.
