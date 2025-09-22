@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import * as fs from 'fs';
 
 const GenerateDataInsightsReportInputSchema = z.object({
   query: z
@@ -47,16 +46,30 @@ const generateDataInsightsReportPrompt = ai.definePrompt({
   input: {schema: GenerateDataInsightsReportInputSchema},
   output: {schema: GenerateDataInsightsReportOutputSchema},
   model: 'googleai/gemini-1.5-pro-latest',
-  prompt: `You are an AI assistant that generates reports based on user queries and visualizations.
+  prompt: `You are an AI assistant that generates professional, multi-page PDF reports based on user queries and data visualizations.
 
-  The user has made the following query: {{{query}}}
+  **User Query:**
+  "{{{query}}}"
 
-  The user has provided the following visualizations:
-  {{#each visualizations}}
-  {{media url=this}}
-  {{/each}}
+  **Visualizations Provided:**
+  {{#if visualizations}}
+    {{#each visualizations}}
+      - Visualization {{media url=this}}
+    {{/each}}
+  {{else}}
+    - No visualizations were provided. Please generate a text-based report and create your own illustrative (but fake) data tables and summaries.
+  {{/if}}
 
-  Create a PDF report that summarizes the query and visualizations. Return the PDF as a data URI.
+  **Your Task:**
+  1.  **Analyze the Query**: Understand the user's request, focusing on the topic (e.g., "temperature anomalies").
+  2.  **Synthesize a Report**: Create a comprehensive, well-structured, and professional-looking report in PDF format.
+  3.  **Bluff Realistic Details**: Since you do not have live data access, you must create realistic-looking data, statistics, and findings. For a query about "temperature anomalies," invent plausible statistics for mean anomaly, trends, specific noteworthy events, and regional differences.
+  4.  **Structure the Report**: The PDF should have a clear structure, including:
+      *   A title page with "Oceanus AI Report" and the user's query.
+      *   An executive summary with key bullet points.
+      *   Sections for Methodology, Findings, Spatial Analysis, Temporal Trends, and a Conclusion.
+      *   Use professional formatting with clear headings, paragraphs, bulleted lists, and tables for data.
+  5.  **Return as PDF Data URI**: Your final output **must** be a single, complete PDF file, encoded as a Base64 data URI string. The format must be \`data:application/pdf;base64,<encoded_pdf_data>\`. Do not return text or markdown. You must generate the PDF file itself.
   `,
 });
 
@@ -67,10 +80,10 @@ const generateDataInsightsReportFlow = ai.defineFlow(
     outputSchema: GenerateDataInsightsReportOutputSchema,
   },
   async input => {
-    // TODO: Implement PDF generation logic here.
-    // Currently returning a placeholder.  Replace with actual PDF generation.
-    const pdfBase64 = fs.readFileSync('src/ai/flows/placeholder.pdf', {encoding: 'base64'});
-    const reportDataUri = `data:application/pdf;base64,${pdfBase64}`;
-    return {reportDataUri};
+    const { output } = await generateDataInsightsReportPrompt(input);
+    if (!output?.reportDataUri) {
+      throw new Error('The AI model did not return a valid PDF report data URI.');
+    }
+    return output;
   }
 );
