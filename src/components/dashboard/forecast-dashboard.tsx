@@ -8,6 +8,7 @@ import { Download, Edit } from 'lucide-react';
 import { ForecastLineChart } from './charts';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import ReactMarkdown from 'react-markdown';
 
 interface ForecastDashboardProps {
   forecastData: ForecastData;
@@ -84,8 +85,8 @@ export function ForecastDashboard({ forecastData, onReconfigure }: ForecastDashb
                     <CardDescription>Key trends and takeaways from the forecast.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="prose prose-invert text-muted-foreground">
-                        {narrative.split('\n').map((p, i) => <p key={i}>{p}</p>)}
+                    <div className="prose prose-sm prose-invert max-w-none text-muted-foreground">
+                       <ReactMarkdown>{narrative}</ReactMarkdown>
                     </div>
                 </CardContent>
             </Card>

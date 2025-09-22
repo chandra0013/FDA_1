@@ -53,8 +53,8 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <Button asChild>
-            <Link href="/discover">Explore FloatChat</Link>
+          <Button asChild variant="secondary">
+            <Link href="/discover">Login / Signup</Link>
           </Button>
         </div>
       </div>
