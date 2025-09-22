@@ -30,6 +30,17 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
+
+  /*
+    Add your @font-face rule for 'Zalando Sans Expanded' here.
+    For example:
+    @font-face {
+      font-family: 'Zalando Sans Expanded';
+      src: url('/fonts/ZalandoSansExpanded-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+  */
 }
 
 @layer base {
