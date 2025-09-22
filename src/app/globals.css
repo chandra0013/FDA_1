@@ -49,4 +49,48 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
+
+  .bg-stars {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 60%),
+      /* near stars */
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.5), transparent),
+      radial-gradient(circle at bottom right, hsl(var(--accent) / 0.5), transparent),
+      /* starfield */
+      radial-gradient(1px 1px at 20px 30px, white, transparent),
+      radial-gradient(1px 1px at 40px 70px, white, transparent),
+      radial-gradient(1px 1px at 50px 160px, white, transparent),
+      radial-gradient(1px 1px at 90px 40px, white, transparent),
+      radial-gradient(1px 1px at 130px 80px, white, transparent),
+      radial-gradient(1px 1px at 160px 120px, white, transparent);
+    animation: star-glow 5s ease-in-out infinite alternate;
+  }
+
+  @keyframes star-glow {
+    from {
+      background-image:
+        radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 60%),
+        radial-gradient(circle at top left, hsl(var(--primary) / 0.5), transparent),
+        radial-gradient(circle at bottom right, hsl(var(--accent) / 0.5), transparent),
+        radial-gradient(1px 1px at 20px 30px, white, transparent),
+        radial-gradient(1px 1px at 40px 70px, white, transparent),
+        radial-gradient(1px 1px at 50px 160px, white, transparent),
+        radial-gradient(1px 1px at 90px 40px, white, transparent),
+        radial-gradient(1px 1px at 130px 80px, white, transparent),
+        radial-gradient(1px 1px at 160px 120px, white, transparent);
+    }
+    to {
+      background-image:
+        radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 60%),
+        radial-gradient(circle at top right, hsl(var(--primary) / 0.6), transparent),
+        radial-gradient(circle at bottom left, hsl(var(--accent) / 0.6), transparent),
+        radial-gradient(1px 1px at 20px 30px, white, transparent),
+        radial-gradient(1px 1px at 40px 70px, white, transparent),
+        radial-gradient(1px 1px at 50px 160px, white, transparent),
+        radial-gradient(1px 1px at 90px 40px, white, transparent),
+        radial-gradient(1px 1px at 130px 80px, white, transparent),
+        radial-gradient(1px 1px at 160px 120px, white, transparent);
+    }
+  }
 }
