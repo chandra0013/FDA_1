@@ -45,6 +45,7 @@ const generateDataInsightsReportPrompt = ai.definePrompt({
   name: 'generateDataInsightsReportPrompt',
   input: {schema: GenerateDataInsightsReportInputSchema},
   output: {schema: GenerateDataInsightsReportOutputSchema},
+  model: 'gemini-pro',
   prompt: `You are an AI assistant that generates reports based on user queries and visualizations.
 
   The user has made the following query: {{{query}}}
