@@ -10,7 +10,7 @@ export function HeroSection() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
 
   return (
-    <section className="relative h-screen w-full flex items-start justify-center pt-48">
+    <section className="relative h-screen w-full flex items-start justify-center pt-56">
       {heroImage && (
         <Image
           src={heroImage.imageUrl}
@@ -45,7 +45,7 @@ export function HeroSection() {
         </div>
 
         {/* Button */}
-        <div className="mt-12">
+        <div className="mt-16">
           <Button
             asChild
             variant="accent"
@@ -53,7 +53,7 @@ export function HeroSection() {
             className="text-lg px-10 py-6 shadow-[0_0_20px_hsl(var(--accent))] hover:shadow-[0_0_30px_hsl(var(--accent))] transition-shadow"
           >
             <Link href="/discover">
-              Explore Argonaut
+              Explore FloatChat
               <ArrowRight className="ml-2 h-6 w-6" />
             </Link>
           </Button>
