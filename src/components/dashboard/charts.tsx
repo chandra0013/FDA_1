@@ -1,3 +1,4 @@
+
 'use client';
 import {
   ResponsiveContainer,
@@ -297,10 +298,11 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
           dataKey="confidence"
           name="Confidence"
           fill="url(#confidence-band)"
-          stroke={false}
+          stroke="none"
           data={data.slice(forecastStartIndex)}
         />
       </ComposedChart>
     </ResponsiveContainer>
   );
 }
+
