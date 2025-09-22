@@ -1,22 +1,157 @@
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+'use client';
+
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Card, CardContent } from './ui/card';
-import { Layers, Thermometer, Droplets } from 'lucide-react';
+import { Layers, Thermometer, Droplets, Loader2 } from 'lucide-react';
+
+const containerStyle = {
+  width: '100%',
+  height: '100%',
+};
+
+const center = {
+  lat: 20,
+  lng: -40,
+};
+
+const mapStyles = [
+  { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{ color: '#263c3f' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#6b9a76' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{ color: '#38414e' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#212a37' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#9ca5b3' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{ color: '#746855' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#1f2835' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#f3d19c' }],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'geometry',
+    stylers: [{ color: '#2f3948' }],
+  },
+  {
+    featureType: 'transit.station',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{ color: '#17263c' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#515c6d' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#17263c' }],
+  },
+];
+
 
 export function MapVisualization() {
-  const mapImage = PlaceHolderImages.find(img => img.id === 'map-visualization');
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+  });
+  
+  const argoFloats = [
+    { lat: 15.2, lng: 89.8 },
+    { lat: 25, lng: -71 },
+    { lat: -34, lng: 18 },
+    { lat: 59, lng: -8 },
+    { lat: -55, lng: 150 },
+  ];
+
+  const renderMap = () => {
+    if (loadError) {
+      return <div>Error loading maps. Please check the API key.</div>;
+    }
+    if (!isLoaded) {
+      return (
+        <div className="h-full w-full flex items-center justify-center bg-background">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+    return (
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={3}
+        options={{
+          styles: mapStyles,
+          disableDefaultUI: true,
+          zoomControl: true,
+        }}
+      >
+        {argoFloats.map((float, index) => (
+          <Marker 
+            key={index} 
+            position={float} 
+            icon={{
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 5,
+              fillColor: "#4DB6AC",
+              fillOpacity: 0.8,
+              strokeWeight: 0
+            }}
+          />
+        ))}
+      </GoogleMap>
+    );
+  };
 
   return (
     <div className="h-full w-full relative bg-background">
-      {mapImage && (
-        <Image
-          src={mapImage.imageUrl}
-          alt={mapImage.description}
-          data-ai-hint={mapImage.imageHint}
-          fill
-          className="object-cover"
-        />
-      )}
+      {renderMap()}
       <div className="absolute top-4 left-4">
         <Card className="glassmorphism border-border">
           <CardContent className="p-4">
