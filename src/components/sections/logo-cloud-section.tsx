@@ -63,10 +63,10 @@ const imageLogos = [
 
 export function LogoCloudSection() {
     return (
-        <section className="py-16 sm:py-24">
+        <section className="bg-background py-16 sm:py-24 flex items-center justify-center min-h-[50vh]">
             <div className="container">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold tracking-tight sm:text-4xl font-headline">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline">
                         Powered By Cutting-Edge Technologies
                     </h2>
                 </div>
@@ -74,8 +74,8 @@ export function LogoCloudSection() {
                     logos={imageLogos}
                     speed={100}
                     direction="left"
-                    logoHeight={40}
-                    gap={40}
+                    logoHeight={60}
+                    gap={80}
                     pauseOnHover
                     scaleOnHover
                     fadeOut

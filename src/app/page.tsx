@@ -9,12 +9,12 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <HeroSection />
+      <LogoCloudSection />
       <div className="space-y-16 sm:space-y-24">
         <AboutSection />
         <FeaturesSection />
         <SampleVisualsSection />
         <TechStackSection />
-        <LogoCloudSection />
       </div>
     </div>
   );
