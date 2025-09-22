@@ -11,6 +11,8 @@ const navLinks = [
   { href: '/discover', label: 'Discover' },
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/learn', label: 'Learn' },
+  { href: '/tutorials', label: 'Tutorials' },
+  { href: '/community', label: 'Community' },
 ];
 
 export function SiteHeader() {
