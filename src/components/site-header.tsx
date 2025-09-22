@@ -9,6 +9,7 @@ import { AppIcon } from '@/components/app-icon';
 
 const navLinks = [
   { href: '/discover', label: 'Discover' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '/learn', label: 'Learn' },
 ];
 
