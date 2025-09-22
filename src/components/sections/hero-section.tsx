@@ -21,7 +21,16 @@ export function HeroSection() {
           priority
         />
       )}
-      <div className="absolute inset-0 bg-black/75" />
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="https://ik.imagekit.io/ollvf7fhfm/Slowmotion_video_of_202509230220.mp4?updatedAt=1758574291289" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         {/* Title + Tagline grouped */}
         <div className="flex flex-col items-center space-y-2">
