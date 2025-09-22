@@ -1,6 +1,6 @@
 'use client';
 
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Card, CardContent } from './ui/card';
 import {
   Layers,
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import initialArgoFloatData from '@/lib/argo-float-data.json';
 import Papa from 'papaparse';
 import { useToast } from '@/hooks/use-toast';
-
+import { FloatDataWindow } from './float-data-window';
 
 const containerStyle = {
   width: '100%',
@@ -110,7 +110,7 @@ const mapStyles = [
   },
 ];
 
-type ArgoFloat = {
+export type ArgoFloat = {
   id: string;
   lat: number;
   lng: number;
@@ -125,8 +125,8 @@ export function MapVisualization() {
   });
 
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
-  const [activeMarker, setActiveMarker] = useState<ArgoFloat | null>(null);
-  const [hoveredMarkerId, setHoveredMarkerId] = useState<string | null>(null);
+  const [activeFloat, setActiveFloat] = useState<ArgoFloat | null>(null);
+  const [isDataWindowOpen, setIsDataWindowOpen] = useState(false);
   const [argoFloats, setArgoFloats] = useState<ArgoFloat[]>(initialArgoFloatData.argoFloats as ArgoFloat[]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -179,8 +179,7 @@ export function MapVisualization() {
         }
       });
     }
-     // Reset file input to allow re-uploading the same file
-    if(fileInputRef.current) {
+     if(fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
@@ -188,24 +187,19 @@ export function MapVisualization() {
   const triggerFileUpload = () => {
     fileInputRef.current?.click();
   };
-
-  const handleMarkerMouseOver = useCallback((marker: ArgoFloat) => {
-    setActiveMarker(marker);
-    setHoveredMarkerId(marker.id);
-  }, []);
-
-  const handleMarkerMouseOut = useCallback(() => {
-    setActiveMarker(null);
-    setHoveredMarkerId(null);
+  
+  const handleMarkerClick = useCallback((float: ArgoFloat) => {
+    setActiveFloat(float);
+    setIsDataWindowOpen(true);
   }, []);
 
   const getMarkerIcon = (sea: string, id: string) => {
-    const isHovered = hoveredMarkerId === id;
+    const isActive = activeFloat?.id === id && isDataWindowOpen;
     const isArabianSea = sea?.toLowerCase().includes('arabian');
     
     return {
       path: google.maps.SymbolPath.CIRCLE,
-      scale: isHovered ? 10 : 7,
+      scale: isActive ? 10 : 7,
       fillColor: isArabianSea ? '#4DB6AC' : '#FFB74D',
       fillOpacity: 1,
       strokeWeight: 0,
@@ -234,32 +228,20 @@ export function MapVisualization() {
           disableDefaultUI: true,
           zoomControl: true,
         }}
+        onClick={() => {
+          setIsDataWindowOpen(false)
+          setActiveFloat(null)
+        }}
       >
         {argoFloats.map((float) => (
           <Marker
             key={float.id}
             position={{ lat: float.lat, lng: float.lng }}
             icon={getMarkerIcon(float.sea, float.id)}
-            onMouseOver={() => handleMarkerMouseOver(float)}
-            onMouseOut={handleMarkerMouseOut}
+            onClick={() => handleMarkerClick(float)}
             animation={google.maps.Animation.DROP}
           />
         ))}
-
-        {activeMarker && (
-          <InfoWindow
-            position={{ lat: activeMarker.lat + 0.5, lng: activeMarker.lng }}
-            onCloseClick={handleMarkerMouseOut}
-          >
-            <div className="p-2 bg-background text-foreground rounded-lg shadow-lg glassmorphism">
-              <h4 className="font-bold text-sm text-primary">{activeMarker.id}</h4>
-              <p className="text-xs text-muted-foreground">{activeMarker.location}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {activeMarker.lat.toFixed(2)}°N, {activeMarker.lng.toFixed(2)}°E
-              </p>
-            </div>
-          </InfoWindow>
-        )}
       </GoogleMap>
     );
   };
@@ -267,6 +249,13 @@ export function MapVisualization() {
   return (
     <div className="h-full w-full relative bg-background">
       {renderMap()}
+      {activeFloat && (
+          <FloatDataWindow 
+            isOpen={isDataWindowOpen}
+            onOpenChange={setIsDataWindowOpen}
+            floatData={activeFloat}
+          />
+        )}
       <div className="absolute top-4 left-4">
         <Card className="glassmorphism border-border">
           <CardContent className="p-4">
