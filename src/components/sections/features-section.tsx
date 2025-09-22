@@ -1,5 +1,6 @@
 import { BrainCircuit, AreaChart, MessagesSquare, BookOpen } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '../ui/card';
+import { TiltedCard } from '../animations/tilted-card';
 
 const features = [
   {
@@ -42,17 +43,19 @@ export function FeaturesSection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="bg-background/50 border-border/50 text-center">
-              <CardHeader>
-                <div className="mx-auto bg-card p-3 rounded-full mb-4 w-fit">
-                  {feature.icon}
-                </div>
-                <CardTitle>{feature.title}</CardTitle>
-                <CardDescription className="pt-2">
-                  {feature.description}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <TiltedCard key={index}>
+                <Card className="bg-background/50 border-border/50 text-center h-full">
+                <CardHeader>
+                    <div className="mx-auto bg-card p-3 rounded-full mb-4 w-fit">
+                    {feature.icon}
+                    </div>
+                    <CardTitle>{feature.title}</CardTitle>
+                    <CardDescription className="pt-2">
+                    {feature.description}
+                    </CardDescription>
+                </CardHeader>
+                </Card>
+            </TiltedCard>
           ))}
         </div>
       </div>
