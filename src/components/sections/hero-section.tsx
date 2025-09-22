@@ -26,7 +26,7 @@ export function HeroSection() {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="absolute inset-0 w-full h-full object-cover z-20"
       >
         <source src="https://ik.imagekit.io/ollvf7fhfm/Slowmotion_video_of_202509230220.mp4?updatedAt=1758574291289" type="video/mp4" />
       </video>
