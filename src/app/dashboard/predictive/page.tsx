@@ -8,7 +8,7 @@ import { LoadingSimulation } from '@/components/dashboard/loading-simulation';
 import { ForecastDashboard } from '@/components/dashboard/forecast-dashboard';
 import type { ForecastData, ForecastVariable } from '@/lib/dashboard-forecast-data';
 import { generateAllForecasts } from '@/lib/dashboard-forecast-data';
-import { Check, Square } from 'lucide-react';
+import { DashboardChat } from '@/components/dashboard/dashboard-chat';
 
 const variablesToForecast: { id: ForecastVariable, label: string }[] = [
   { id: 'temperature', label: 'Temperature' },
@@ -58,10 +58,20 @@ export default function PredictiveDashboardConfigPage() {
   }
 
   if (pageState === 'forecasting' && forecastData) {
-    return <ForecastDashboard 
-            forecastData={forecastData} 
-            onReconfigure={() => setPageState('configuring')}
-          />;
+    return <>
+            <ForecastDashboard 
+              forecastData={forecastData} 
+              onReconfigure={() => setPageState('configuring')}
+            />
+            <DashboardChat 
+              mode="predictive" 
+              context={{ 
+                trainingDays: selectedDays, 
+                horizon: selectedHorizon,
+                variables: selectedVariables
+              }} 
+            />
+          </>;
   }
 
   return (
@@ -121,7 +131,7 @@ export default function PredictiveDashboardConfigPage() {
                   <Button variant="link" size="sm" onClick={handleDeselectAll}>Deselect All</Button>
                 </div>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 md-grid-cols-3 gap-3">
                 {variablesToForecast.map(variable => (
                   <div key={variable.id} className="flex items-center space-x-2">
                     <Checkbox 

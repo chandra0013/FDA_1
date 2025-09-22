@@ -107,6 +107,12 @@ export default {
           '100%': {
             transform: 'rotate(360deg)',
           }
+        },
+        'pulse-slow': {
+          '50%': {
+            transform: 'scale(1.05)',
+            boxShadow: '0 0 20px hsl(var(--primary) / 0.5)',
+          }
         }
       },
       animation: {
@@ -115,6 +121,7 @@ export default {
         'shine': 'shine 4s linear infinite',
         'blur': 'blur 0.5s ease-out forwards',
         'border-spin': 'border-spin 7s linear infinite',
+        'pulse-slow': 'pulse-slow 8s ease-in-out infinite',
       },
     },
   },

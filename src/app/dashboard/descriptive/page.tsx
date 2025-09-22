@@ -23,6 +23,7 @@ import {
   generateRadialGaugeData,
   generateProfileCrossSectionData
 } from '@/lib/dashboard-data';
+import { DashboardChat } from '@/components/dashboard/dashboard-chat';
 
 
 const chartComponents = [
@@ -80,7 +81,7 @@ const chartComponents = [
     title: 'Index: Baseline vs. Optimized',
     description: 'Aggregate ocean health index comparison.',
     component: <DualRadialGauges data={generateRadialGaugeData()} />,
-    className: 'xl:col-span-2',
+    className: 'xl-col-span-2',
   },
   {
     id: 'profile-cross-section',
@@ -93,36 +94,39 @@ const chartComponents = [
 
 export default function DescriptiveDashboardPage() {
   return (
-    <div className="pt-24 pb-16 container">
-      <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline">
-            Descriptive Analytics Dashboard
-          </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Analyzing operational and scientific performance metrics.
-          </p>
-      </div>
+    <>
+      <div className="pt-24 pb-16 container">
+        <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline">
+              Descriptive Analytics Dashboard
+            </h1>
+            <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+              Analyzing operational and scientific performance metrics.
+            </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {chartComponents.map((chart) => (
-          <Card key={chart.id} className={`bg-card border-border shadow-sm rounded-xl ${chart.className}`}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="font-bold">{chart.title}</CardTitle>
-                  <CardDescription className="text-muted-foreground">{chart.description}</CardDescription>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {chartComponents.map((chart) => (
+            <Card key={chart.id} className={`bg-card border-border shadow-sm rounded-xl ${chart.className}`}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="font-bold">{chart.title}</CardTitle>
+                    <CardDescription className="text-muted-foreground">{chart.description}</CardDescription>
+                  </div>
+                  <Button variant="ghost" size="icon">
+                    <Download className="h-4 w-4" />
+                  </Button>
                 </div>
-                 <Button variant="ghost" size="icon">
-                  <Download className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="h-[360px]">
-              {chart.component}
-            </CardContent>
-          </Card>
-        ))}
+              </CardHeader>
+              <CardContent className="h-[360px]">
+                {chart.component}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
+      <DashboardChat mode="descriptive" />
+    </>
   );
 }
