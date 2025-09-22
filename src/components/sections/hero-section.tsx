@@ -10,7 +10,7 @@ export function HeroSection() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background');
 
   return (
-    <section className="relative h-screen w-full flex items-start justify-center pt-64">
+    <section className="relative h-screen w-full flex items-start justify-center pt-60">
       {heroImage && (
         <Image
           src={heroImage.imageUrl}
