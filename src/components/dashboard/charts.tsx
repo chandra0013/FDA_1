@@ -28,9 +28,15 @@ import type { ForecastDataPoint } from '@/lib/dashboard-forecast-data';
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    const tooltipData: Record<string, any> = { name: data.name };
+
+    payload.forEach((p: any) => {
+        tooltipData[p.name] = p.value;
+    });
+
     return (
       <div className="bg-card border border-border p-2 rounded-lg shadow-lg text-sm">
-        {Object.entries(data).map(([key, value]) => (
+        {Object.entries(tooltipData).map(([key, value]) => (
            <p key={key} className="label">{`${key}: ${typeof value === 'number' ? value.toFixed(2) : value}`}</p>
         ))}
       </div>
@@ -61,15 +67,16 @@ export function OceanHealthScatter({ data }: { data: any[] }) {
 export function KpiBars({ data }: { data: any[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data} layout="vertical" margin={{ left: 20 }}>
+      <BarChart data={data} layout="vertical" margin={{ left: 20, right: 30 }}>
         <XAxis type="number" hide />
         <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} width={120}/>
         <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="baseline" fill="hsl(var(--chart-3))" radius={[4, 4, 4, 4]}>
-            <LabelList dataKey="baseline" position="right" formatter={(v:number) => v.toFixed(2)} />
+        <Legend />
+        <Bar dataKey="arabianSea" name="Arabian Sea" fill="hsl(var(--chart-1))" radius={[4, 4, 4, 4]}>
+            <LabelList dataKey="arabianSea" position="right" formatter={(v:number) => v.toFixed(2)} />
         </Bar>
-        <Bar dataKey="optimized" fill="hsl(var(--chart-1))" radius={[4, 4, 4, 4]}>
-            <LabelList dataKey="optimized" position="right" formatter={(v:number) => v.toFixed(2)} />
+        <Bar dataKey="bayOfBengal" name="Bay of Bengal" fill="hsl(var(--chart-2))" radius={[4, 4, 4, 4]}>
+            <LabelList dataKey="bayOfBengal" position="right" formatter={(v:number) => v.toFixed(2)} />
         </Bar>
       </BarChart>
     </ResponsiveContainer>

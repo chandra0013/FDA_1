@@ -40,20 +40,27 @@ export function generateOceanHealthData(count: number) {
 }
 
 export function generateKpiData() {
-    const baselineTemp = randomInRange(27.8, 28.5);
-    const baselineSalinity = randomInRange(35.4, 35.6);
-    const baselineOxygen = randomInRange(5.6, 5.8);
-    const baselineChlorophyll = randomInRange(1.0, 1.2);
-    const baselineNitrate = randomInRange(1.8, 2.0);
-
-    return [
-        { name: 'Mean Temp (°C)', baseline: baselineTemp, optimized: baselineTemp - randomInRange(0.2, 0.4) },
-        { name: 'Mean Salinity (PSU)', baseline: baselineSalinity, optimized: baselineSalinity + randomInRange(-0.02, 0.02) },
-        { name: 'Mean Oxygen', baseline: baselineOxygen, optimized: baselineOxygen + randomInRange(0.05, 0.15) },
-        { name: 'Mean Chlorophyll', baseline: baselineChlorophyll, optimized: baselineChlorophyll + randomInRange(-0.03, 0.02) },
-        { name: 'Mean Nitrate', baseline: baselineNitrate, optimized: baselineNitrate - randomInRange(0.05, 0.15) },
+    const kpis = [
+        { name: 'Mean Temp (°C)', range: [26.51, 29.27], seaDiff: 0.2 },
+        { name: 'Mean Salinity (PSU)', range: [35.28, 35.70], seaDiff: -0.1 },
+        { name: 'Mean Oxygen', range: [5.4508, 6.1149], seaDiff: -0.3 },
+        { name: 'Mean Chlorophyll', range: [0.94599, 1.27193], seaDiff: 0.15 },
+        { name: 'Mean Nitrate', range: [1.63915, 2.08097], seaDiff: 0.2 },
     ];
+
+    return kpis.map(kpi => {
+        const midPoint = (kpi.range[0] + kpi.range[1]) / 2;
+        const arabianSea = randomInRange(midPoint - (midPoint - kpi.range[0]) * 0.1, midPoint + (kpi.range[1] - midPoint) * 0.1);
+        const bayOfBengal = arabianSea + randomInRange(kpi.seaDiff * 0.8, kpi.seaDiff * 1.2);
+        
+        return {
+            name: kpi.name,
+            arabianSea: Math.max(kpi.range[0], Math.min(kpi.range[1], arabianSea)),
+            bayOfBengal: Math.max(kpi.range[0], Math.min(kpi.range[1], bayOfBengal)),
+        }
+    });
 }
+
 
 export function generateCompositionData() {
     let temp = randomInRange(30, 40);

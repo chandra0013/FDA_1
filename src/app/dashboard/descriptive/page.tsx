@@ -36,8 +36,8 @@ const chartComponents = [
   },
   {
     id: 'kpi-bars',
-    title: 'KPIs: Baseline vs. Optimized',
-    description: 'Comparison of key performance indicators before and after optimization.',
+    title: 'KPIs: Regional Comparison',
+    description: 'Objective comparison of key variables across selected groups.',
     component: <KpiBars data={generateKpiData()} />,
     className: 'xl:col-span-2',
   },
