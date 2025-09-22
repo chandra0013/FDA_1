@@ -13,16 +13,19 @@ interface AiChatResult {
 export async function handleAiChat(query: string, forReport: boolean = false): Promise<AiChatResult> {
     try {
         const lowerQuery = query.toLowerCase();
+        const reportKeywords = ['report', 'analysis', 'brief', 'overview'];
 
-        if (forReport || lowerQuery.includes('report')) {
+        if (forReport || reportKeywords.some(keyword => lowerQuery.includes(keyword))) {
             // Generate a report
             const reportResult = await generateDataInsightsReport({
                 query,
                 visualizations: [] // In a real app, you'd pass chart data URIs
             });
+            
             if (forReport) {
                 return { reportDataUri: reportResult.reportDataUri };
             }
+            // The UI will handle the download button based on this response.
             return { response: "Your PDF report is ready for download." };
 
         } else if (lowerQuery.includes('summary') || lowerQuery.includes('learning')) {
