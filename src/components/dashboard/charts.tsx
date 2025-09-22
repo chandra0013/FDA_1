@@ -22,6 +22,7 @@ import {
   LineChart,
   Line
 } from 'recharts';
+import type { ForecastDataPoint } from '@/lib/dashboard-forecast-data';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -253,4 +254,53 @@ export function ProfileCrossSection({ data }: { data: any[] }) {
             </LineChart>
         </ResponsiveContainer>
     );
+}
+
+
+export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], range: [number, number] }) {
+  const forecastStartIndex = data.findIndex(p => p.type === 'forecast');
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <ComposedChart data={data}>
+         <defs>
+          <linearGradient id="confidence-band" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0.1} />
+          </linearGradient>
+        </defs>
+        <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+        <YAxis domain={range} stroke="hsl(var(--muted-foreground))" fontSize={12} />
+        <Tooltip content={<CustomTooltip />} />
+        <Legend />
+        <Line 
+          type="monotone" 
+          dataKey="value" 
+          name="Historical"
+          stroke="hsl(var(--chart-1))" 
+          strokeWidth={2} 
+          dot={false}
+          data={data.slice(0, forecastStartIndex + 1)}
+        />
+        <Line 
+          type="monotone" 
+          dataKey="value" 
+          name="Forecast"
+          stroke="hsl(var(--chart-1))" 
+          strokeWidth={2} 
+          strokeDasharray="5 5"
+          dot={false}
+          data={data.slice(forecastStartIndex)}
+        />
+        <Area 
+          type="monotone" 
+          dataKey="confidence"
+          name="Confidence"
+          fill="url(#confidence-band)"
+          stroke={false}
+          data={data.slice(forecastStartIndex)}
+        />
+      </ComposedChart>
+    </ResponsiveContainer>
+  );
 }
