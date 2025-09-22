@@ -34,7 +34,7 @@ export function HeroSection() {
       <div className="relative z-20 flex flex-col items-center text-center px-4">
         {/* Title + Tagline grouped */}
         <div className="flex flex-col items-center space-y-2">
-          <ShinyText className="text-6xl font-bold md:text-8xl from-primary to-foreground font-zalando">
+          <ShinyText className="text-6xl font-bold md:text-8xl from-primary to-foreground font-zalando font-medium italic">
             Blue Query
           </ShinyText>
           <BlurText
