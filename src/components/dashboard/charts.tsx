@@ -45,7 +45,7 @@ export function OceanHealthScatter({ data }: { data: any[] }) {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ScatterChart>
+      <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
         <XAxis type="number" dataKey="temp" name="Temperature" unit="°C" domain={[26.5, 29.3]} stroke="hsl(var(--muted-foreground))" />
         <YAxis type="number" dataKey="nitrate" name="Nitrate" unit="µmol/kg" domain={[1.64, 2.08]} stroke="hsl(var(--muted-foreground))" />
         <ZAxis type="number" dataKey="oxygen" range={[10, 400]} name="Oxygen" unit="mg/L" />
@@ -305,4 +305,5 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
     </ResponsiveContainer>
   );
 }
+
 
