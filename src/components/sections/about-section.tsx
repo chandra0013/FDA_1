@@ -44,7 +44,7 @@ export function AboutSection() {
                 <Card className="h-full overflow-hidden bg-card/80">
                   <CardContent className="p-0">
                     {image && (
-                      <div className="relative h-64 w-full">
+                      <div className="relative aspect-[16/9] w-full">
                         <Image
                           src={image.imageUrl}
                           alt={image.description}
