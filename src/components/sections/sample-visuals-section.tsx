@@ -1,20 +1,28 @@
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent } from '@/components/ui/card';
-import Image from 'next/image';
+import {
+  ProfileCrossSection,
+  MonthlyTrendArea,
+  KpiBars,
+} from '@/components/dashboard/charts';
+import {
+  generateProfileCrossSectionData,
+  generateMonthlyTrendData,
+  generateKpiData,
+} from '@/lib/dashboard-data';
 
 const sampleCharts = [
   {
-    title: "Salinity Profile",
-    imageId: 'sample-chart-1'
+    title: 'Profile Cross-Section',
+    component: <ProfileCrossSection data={generateProfileCrossSectionData(10)} />,
   },
   {
-    title: "Temperature over Time",
-    imageId: 'sample-chart-2'
+    title: 'Monthly Trends',
+    component: <MonthlyTrendArea data={generateMonthlyTrendData(16)} />,
   },
   {
-    title: "BGC Parameter Comparison",
-    imageId: 'sample-chart-3'
-  }
+    title: 'KPI Comparison',
+    component: <KpiBars data={generateKpiData()} />,
+  },
 ];
 
 export function SampleVisualsSection() {
@@ -31,21 +39,12 @@ export function SampleVisualsSection() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {sampleCharts.map((chart, index) => {
-            const image = PlaceHolderImages.find((img) => img.id === chart.imageId);
             return (
               <Card key={index} className="overflow-hidden group">
                 <CardContent className="p-0">
-                  {image && (
-                    <div className="relative h-64 w-full">
-                      <Image
-                        src={image.imageUrl}
-                        alt={image.description}
-                        data-ai-hint={image.imageHint}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                  )}
+                  <div className="relative h-64 w-full bg-card p-4">
+                    {chart.component}
+                  </div>
                   <div className="p-6 bg-card">
                     <h3 className="text-lg font-semibold text-foreground">
                       {chart.title}
