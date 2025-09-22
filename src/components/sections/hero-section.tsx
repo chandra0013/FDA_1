@@ -31,7 +31,7 @@ export function HeroSection() {
           delay={0.5}
         />
         <div className="mt-8">
-          <StarBorder asChild>
+          <StarBorder>
             <Link href="/discover">Explore FloatChat</Link>
           </StarBorder>
         </div>
