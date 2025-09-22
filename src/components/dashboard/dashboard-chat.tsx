@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Bot, User, Send, X, MessageSquare } from 'lucide-react';
+import { useState, useRef, useEffect, useTransition } from 'react';
+import { Bot, User, Send, X, MessageSquare, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -15,6 +15,9 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet"
+import { useToast } from '@/hooks/use-toast';
+import { handleDashboardAiChat } from '@/app/actions';
+import { Card, CardContent } from '../ui/card';
 
 
 type Message = {
@@ -37,6 +40,8 @@ export function DashboardChat({ mode, context }: DashboardChatProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,21 +55,37 @@ export function DashboardChat({ mode, context }: DashboardChatProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isPending) return;
 
     const userMessage: Message = { id: crypto.randomUUID(), role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
+    const query = input;
     setInput('');
 
-    // Mock response
-    setTimeout(() => {
+    startTransition(async () => {
+      const result = await handleDashboardAiChat(query, mode, context);
+      
+      if (result.error) {
+        toast({
+          title: 'AI Error',
+          description: result.error,
+          variant: 'destructive',
+        });
         const assistantMessage: Message = {
-            id: crypto.randomUUID(),
-            role: 'assistant',
-            content: `This is a mock response for your query: "${userMessage.content}" in ${mode} mode.`,
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: "I'm sorry, I encountered an error. Please try again.",
         };
         setMessages(prev => [...prev, assistantMessage]);
-    }, 1000);
+      } else {
+        const assistantMessage: Message = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: result.response || "I don't have a response for that.",
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      }
+    });
   };
 
   return (
@@ -126,6 +147,20 @@ export function DashboardChat({ mode, context }: DashboardChatProps) {
                   )}
                 </div>
               ))}
+               {isPending && (
+                <div className="flex items-start gap-3 justify-start">
+                  <Avatar className="w-8 h-8">
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        <Bot size={20} />
+                      </AvatarFallback>
+                    </Avatar>
+                  <Card className="bg-background">
+                    <CardContent className="p-3">
+                        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
             </div>
           </ScrollArea>
 
@@ -139,8 +174,9 @@ export function DashboardChat({ mode, context }: DashboardChatProps) {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about this dashboard..."
                 className="flex-1"
+                disabled={isPending}
               />
-              <Button type="submit" size="icon">
+              <Button type="submit" size="icon" disabled={!input.trim() || isPending}>
                 <Send />
               </Button>
             </form>

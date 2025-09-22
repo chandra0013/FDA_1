@@ -45,3 +45,20 @@ export async function handleAiChat(query: string, forReport: boolean = false): P
         return { error: e.message || 'An unknown error occurred with the AI service.' };
     }
 }
+
+
+export async function handleDashboardAiChat(query: string, mode: 'descriptive' | 'predictive', context?: any): Promise<AiChatResult> {
+    try {
+        let fullQuery = `Dashboard Mode: ${mode}. User Query: "${query}"`;
+        if (mode === 'predictive' && context) {
+            fullQuery += `\n\nPredictive Context:\n${JSON.stringify(context, null, 2)}`;
+        }
+        
+        const response = await generateChatResponse({ query: fullQuery });
+        return { response: response.answer };
+
+    } catch (e: any) {
+        console.error("Dashboard AI handler error:", e);
+        return { error: e.message || 'An unknown error occurred with the AI service.' };
+    }
+}
