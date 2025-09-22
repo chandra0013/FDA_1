@@ -10,19 +10,19 @@
     {
       "id": "about-card-1",
       "description": "An ARGO float being deployed into the ocean.",
-      "imageUrl": "https://picsum.photos/seed/argo-deploy/600/800",
+      "imageUrl": "https://ik.imagekit.io/ollvf7fhfm/Gemini_Generated_Image_c0a3tec0a3tec0a3%20(1).png?updatedAt=1758575450125",
       "imageHint": "ocean float"
     },
     {
       "id": "about-card-2",
       "description": "A satellite view of the earth showing ocean temperatures.",
-      "imageUrl": "https://picsum.photos/seed/ocean-temp/600/800",
+      "imageUrl": "https://ik.imagekit.io/ollvf7fhfm/Gemini_Generated_Image_gzv7pcgzv7pcgzv7%20(1).png?updatedAt=1758575353340",
       "imageHint": "ocean temperature"
     },
     {
       "id": "about-card-3",
       "description": "A scientist analyzing data on a computer screen.",
-      "imageUrl": "https://picsum.photos/seed/ocean-analysis/600/800",
+      "imageUrl": "https://ik.imagekit.io/ollvf7fhfm/Gemini_Generated_Image_c0a3tec0a3tec0a3.png?updatedAt=1758575353750",
       "imageHint": "data analysis"
     },
     {
