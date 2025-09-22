@@ -38,7 +38,7 @@ export function HeroSection() {
             Oceanus AI
           </ShinyText>
           <BlurText
-            text="AI-Powered Ocean Data Discovery"
+            text="Ocean Intelligence, Conversation by design"
             className="text-xl md:text-3xl text-foreground/80"
             delay={0.5}
           />
