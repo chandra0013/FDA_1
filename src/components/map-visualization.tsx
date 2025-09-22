@@ -2,7 +2,17 @@
 
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Card, CardContent } from './ui/card';
-import { Layers, Thermometer, Droplets, Loader2 } from 'lucide-react';
+import {
+  Layers,
+  Thermometer,
+  Droplets,
+  Loader2,
+  Map as MapIcon,
+  Satellite,
+} from 'lucide-react';
+import { useState } from 'react';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 const containerStyle = {
   width: '100%',
@@ -95,13 +105,14 @@ const mapStyles = [
   },
 ];
 
-
 export function MapVisualization() {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
   });
-  
+
+  const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
+
   const argoFloats = [
     { lat: 15.2, lng: 89.8 },
     { lat: 25, lng: -71 },
@@ -126,22 +137,23 @@ export function MapVisualization() {
         mapContainerStyle={containerStyle}
         center={center}
         zoom={3}
+        mapTypeId={mapType}
         options={{
-          styles: mapStyles,
+          styles: mapType === 'roadmap' ? mapStyles : undefined,
           disableDefaultUI: true,
           zoomControl: true,
         }}
       >
         {argoFloats.map((float, index) => (
-          <Marker 
-            key={index} 
-            position={float} 
+          <Marker
+            key={index}
+            position={float}
             icon={{
               path: google.maps.SymbolPath.CIRCLE,
               scale: 5,
-              fillColor: "#4DB6AC",
+              fillColor: '#4DB6AC',
               fillOpacity: 0.8,
-              strokeWeight: 0
+              strokeWeight: 0,
             }}
           />
         ))}
@@ -169,6 +181,26 @@ export function MapVisualization() {
                 <Droplets className="h-4 w-4 text-primary" />
                 <span>Salinity</span>
               </div>
+            </div>
+            <div className="mt-4 flex gap-2">
+              <Button
+                size="sm"
+                variant={mapType === 'roadmap' ? 'secondary' : 'ghost'}
+                onClick={() => setMapType('roadmap')}
+                className={cn('flex-1', mapType === 'roadmap' && "bg-primary/20")}
+              >
+                <MapIcon className="mr-2 h-4 w-4" />
+                Map
+              </Button>
+              <Button
+                size="sm"
+                variant={mapType === 'satellite' ? 'secondary' : 'ghost'}
+                onClick={() => setMapType('satellite')}
+                className={cn('flex-1', mapType === 'satellite' && "bg-primary/20")}
+              >
+                <Satellite className="mr-2 h-4 w-4" />
+                Satellite
+              </Button>
             </div>
           </CardContent>
         </Card>
