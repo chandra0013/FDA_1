@@ -41,7 +41,7 @@ const personalizedLearningSummaryPrompt = ai.definePrompt({
   name: 'personalizedLearningSummaryPrompt',
   input: {schema: PersonalizedLearningSummaryInputSchema},
   output: {schema: PersonalizedLearningSummaryOutputSchema},
-  model: 'gemini-pro',
+  model: 'googleai/gemini-pro',
   prompt: `You are an AI assistant designed to provide personalized learning summaries.
 Based on the user's interaction data, identify key areas where the user can focus their learning efforts.
 Provide a concise and actionable summary of important things to focus on to improve their understanding.
