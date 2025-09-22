@@ -1,7 +1,9 @@
+
 'use client';
 
 import { useState, useRef, useEffect, useTransition } from 'react';
-import { Bot, User, Send, Mic, Download, Loader2 } from 'lucide-react';
+import { Bot, User, Send, Mic, Download, Loader2, ChevronsRight } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
@@ -10,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 import { handleAiChat } from '@/app/actions';
-import { Card, CardContent } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 type Message = {
   id: string;
@@ -20,12 +22,27 @@ type Message = {
 };
 
 const sampleQueries = [
-  'Show salinity profiles near equator in March 2023',
+  'What is an Argo float?',
   'Compare BGC parameters in Arabian Sea',
   'Find nearest ARGO floats to 15°N, 90°E',
   'Generate a report on temperature anomalies in the North Atlantic.',
-  'Give me a personalized learning summary based on my queries.'
 ];
+
+const MarkdownComponents: object = {
+  h3: ({ node, ...props }: any) => <h3 className="mt-4 mb-2 text-lg font-semibold" {...props} />,
+  ul: ({ node, ...props }: any) => <ul className="list-none space-y-2" {...props} />,
+  li: ({ node, ...props }: any) => (
+    <li className="flex items-start">
+      <ChevronsRight className="h-4 w-4 mr-2 mt-1 text-primary flex-shrink-0" />
+      <span {...props} />
+    </li>
+  ),
+  blockquote: ({ node, ...props }: any) => (
+    <blockquote className="mt-2 border-l-2 border-primary pl-4 italic text-muted-foreground" {...props} />
+  ),
+  p: ({ node, ...props }: any) => <p className="mb-2" {...props} />,
+};
+
 
 export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -174,13 +191,19 @@ export function ChatInterface() {
               )}
               <div
                 className={cn(
-                  'max-w-[75%] rounded-lg p-3 text-sm',
+                  'max-w-[85%] rounded-lg p-3 text-sm',
                   message.role === 'user'
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-background'
                 )}
               >
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                 {message.role === 'assistant' ? (
+                  <ReactMarkdown components={MarkdownComponents}>
+                    {message.content}
+                  </ReactMarkdown>
+                ) : (
+                  <p>{message.content}</p>
+                )}
                 {message.content.includes("report is ready") && (
                   <Button
                     size="sm"
