@@ -1,7 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Code2, KeyRound, Terminal, Book } from 'lucide-react';
+import { Code2, KeyRound, Terminal, Book, UploadCloud } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const devSections = [
     { id: 'api', title: 'API Reference', icon: <Code2 /> },
@@ -46,11 +48,14 @@ export default function DeveloperPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>SDK & CLI</CardTitle>
-                        <CardDescription>Code samples in JavaScript, Python, and Bash.</CardDescription>
+                        <CardDescription>Interact with your data using our command-line tools.</CardDescription>
                     </CardHeader>
                      <CardContent className="space-y-4">
-                        <h3 className="font-semibold">Coming Soon</h3>
-                        <p className="text-muted-foreground">Our SDKs and command-line interface are under active development. Check back for updates.</p>
+                        <h3 className="font-semibold">Interactive Terminal</h3>
+                        <p className="text-muted-foreground">Use our web-based terminal to import data and run commands directly.</p>
+                        <Button asChild>
+                            <Link href="/discover/sdk">Launch Terminal</Link>
+                        </Button>
                     </CardContent>
                 </Card>
             </TabsContent>

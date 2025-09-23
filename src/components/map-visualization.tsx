@@ -1,3 +1,4 @@
+
 'use client';
 
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
@@ -14,10 +15,11 @@ import {
 import { useState, useCallback, useRef } from 'react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
-import initialArgoFloatData from '@/lib/argo-float-data.json';
 import Papa from 'papaparse';
 import { useToast } from '@/hooks/use-toast';
 import { FloatDataWindow } from './float-data-window';
+import { useArgoFloats, type ArgoFloat } from '@/hooks/use-argo-floats';
+import { SWRConfig } from 'swr';
 
 const containerStyle = {
   width: '100%',
@@ -110,15 +112,8 @@ const mapStyles = [
   },
 ];
 
-export type ArgoFloat = {
-  id: string;
-  lat: number;
-  lng: number;
-  location: string;
-  sea: 'Arabian Sea' | 'Bay of Bengal' | string;
-};
 
-export function MapVisualization() {
+function MapInner() {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
@@ -127,9 +122,9 @@ export function MapVisualization() {
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [activeFloat, setActiveFloat] = useState<ArgoFloat | null>(null);
   const [isDataWindowOpen, setIsDataWindowOpen] = useState(false);
-  const [argoFloats, setArgoFloats] = useState<ArgoFloat[]>(initialArgoFloatData.argoFloats as ArgoFloat[]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { argoFloats, mutate: mutateArgoFloats } = useArgoFloats();
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -157,7 +152,7 @@ export function MapVisualization() {
                 sea: sea
               };
             });
-            setArgoFloats(parsedData);
+            mutateArgoFloats(parsedData, false);
             toast({
               title: "CSV Uploaded",
               description: `${parsedData.length} floats loaded onto the map.`,
@@ -263,7 +258,7 @@ export function MapVisualization() {
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Layers className="h-4 w-4 text-primary" />
-                <span>ARGO Floats</span>
+                <span>ARGO Floats ({argoFloats.length})</span>
               </div>
               <div className="flex items-center gap-2">
                 <Thermometer className="h-4 w-4 text-primary" />
@@ -319,4 +314,12 @@ export function MapVisualization() {
       </div>
     </div>
   );
+}
+
+export function MapVisualization() {
+  return (
+    <SWRConfig>
+      <MapInner />
+    </SWRConfig>
+  )
 }
