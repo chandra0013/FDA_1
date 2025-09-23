@@ -17,7 +17,7 @@ import { ChevronDown } from 'lucide-react';
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/learn', label: 'Learn' },
-  { href: '/tutorials', label: 'Tutorials' },
+  { href: '/discover/pricing', label: 'Pricing' },
   { href: '/community', label: 'Community' },
 ];
 
@@ -25,7 +25,6 @@ const discoverLinks = [
     { href: '/discover', label: 'FloatChat' },
     { href: '/discover/how-it-works', label: 'How It Works' },
     { href: '/discover/product-tour', label: 'Product Tour' },
-    { href: '/discover/pricing', label: 'Pricing' },
     { href: '/discover/developer', label: 'Developers' },
     { href: '/discover/resources', label: 'Resources' },
 ]
