@@ -28,22 +28,33 @@ import type { ForecastDataPoint } from '@/lib/dashboard-forecast-data';
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    const tooltipData: Record<string, any> = { name: data.name };
+    // Dynamically find a relevant name/label key
+    const nameKey = data.profileId || data.name || data.month || data.day || label;
+    
+    const tooltipData: Record<string, any> = {};
+    if (nameKey) {
+        tooltipData['name'] = nameKey;
+    }
 
     payload.forEach((p: any) => {
-        tooltipData[p.name] = p.value;
+        // Use the formatted name from the Bar/Line/etc component
+        const key = p.name || p.dataKey;
+        if (key !== 'payload') {
+            tooltipData[key] = p.value;
+        }
     });
 
     return (
       <div className="bg-card border border-border p-2 rounded-lg shadow-lg text-sm">
         {Object.entries(tooltipData).map(([key, value]) => (
-           <p key={key} className="label">{`${key}: ${typeof value === 'number' ? value.toFixed(2) : value}`}</p>
+           <p key={key} className="label capitalize">{`${key}: ${typeof value === 'number' ? value.toFixed(2) : value}`}</p>
         ))}
       </div>
     );
   }
   return null;
 };
+
 
 export function OceanHealthScatter({ data }: { data: any[] }) {
   const arabianSeaData = data.filter(d => d.region === 'Arabian Sea');
