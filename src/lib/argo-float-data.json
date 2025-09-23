@@ -1,73 +1,214 @@
+
 {
   "argoFloats": [
     {
       "id": "AD06",
-      "lat": 10.0,
-      "lng": 66.0,
+      "lat": 10,
+      "lng": 66,
       "location": "Arabian Sea, west of India",
       "sea": "Arabian Sea"
     },
     {
       "id": "AD08",
-      "lat": 6.0,
-      "lng": 70.0,
+      "lat": 6,
+      "lng": 70,
       "location": "Arabian Sea, SW of Kerala",
       "sea": "Arabian Sea"
     },
     {
       "id": "AD10",
       "lat": 8.5,
-      "lng": 76.0,
+      "lng": 76,
       "location": "Off Kerala coast",
       "sea": "Arabian Sea"
     },
     {
       "id": "CB02",
-      "lat": 9.0,
+      "lat": 9,
       "lng": 75.5,
       "location": "Near Calicut, Kerala coast",
       "sea": "Arabian Sea"
     },
     {
       "id": "BD10",
-      "lat": 15.0,
-      "lng": 85.0,
+      "lat": 15,
+      "lng": 85,
       "location": "Bay of Bengal, east of Andhra",
       "sea": "Bay of Bengal"
     },
     {
       "id": "BD11",
       "lat": 12.5,
-      "lng": 84.0,
+      "lng": 84,
       "location": "Bay of Bengal, SE of Chennai",
       "sea": "Bay of Bengal"
     },
     {
       "id": "BD12",
-      "lat": 11.0,
-      "lng": 93.0,
+      "lat": 11,
+      "lng": 93,
       "location": "Andaman Sea, near Nicobar",
       "sea": "Bay of Bengal"
     },
     {
       "id": "BD13",
-      "lat": 14.0,
-      "lng": 87.0,
+      "lat": 14,
+      "lng": 87,
       "location": "Central Bay of Bengal",
       "sea": "Bay of Bengal"
     },
     {
       "id": "BD14",
-      "lat": 8.0,
-      "lng": 88.0,
+      "lat": 8,
+      "lng": 88,
       "location": "Southern Bay of Bengal",
       "sea": "Bay of Bengal"
     },
     {
       "id": "CB01",
       "lat": 11.5,
-      "lng": 92.0,
+      "lng": 92,
       "location": "Andaman Islands region",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN21",
+      "lat": 19.5,
+      "lng": 68,
+      "location": "Offshore Mumbai High",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN22",
+      "lat": 20,
+      "lng": 69.5,
+      "location": "Gulf of Khambhat",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN23",
+      "lat": 18,
+      "lng": 72,
+      "location": "Nearshore Mumbai",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN24",
+      "lat": 16,
+      "lng": 73,
+      "location": "Offshore Ratnagiri",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN25",
+      "lat": 15,
+      "lng": 73.5,
+      "location": "Goa Coastal Waters",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN26",
+      "lat": 13,
+      "lng": 74,
+      "location": "Mangalore Offshore",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN27",
+      "lat": 11,
+      "lng": 75,
+      "location": "Lakshadweep Sea",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN28",
+      "lat": 9,
+      "lng": 76,
+      "location": "Offshore Kochi",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN29",
+      "lat": 8,
+      "lng": 77,
+      "location": "Gulf of Mannar",
+      "sea": "Arabian Sea"
+    },
+    {
+      "id": "IN30",
+      "lat": 7,
+      "lng": 78,
+      "location": "South of Sri Lanka",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN31",
+      "lat": 10,
+      "lng": 81,
+      "location": "Palk Bay",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN32",
+      "lat": 13,
+      "lng": 80.5,
+      "location": "Offshore Chennai",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN33",
+      "lat": 16.5,
+      "lng": 82.5,
+      "location": "Krishna-Godavari Basin",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN34",
+      "lat": 18,
+      "lng": 84,
+      "location": "Offshore Visakhapatnam",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN35",
+      "lat": 20,
+      "lng": 87,
+      "location": "Offshore Paradip",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN36",
+      "lat": 21,
+      "lng": 89,
+      "location": "Sundarbans Delta",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN37",
+      "lat": 20.5,
+      "lng": 91,
+      "location": "Myanmar Offshore",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN38",
+      "lat": 17,
+      "lng": 94,
+      "location": "Andaman Sea",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN39",
+      "lat": 14,
+      "lng": 93.5,
+      "location": "Central Andaman Sea",
+      "sea": "Bay of Bengal"
+    },
+    {
+      "id": "IN40",
+      "lat": 10,
+      "lng": 92.5,
+      "location": "Nicobar Islands",
       "sea": "Bay of Bengal"
     }
   ]
