@@ -10,6 +10,7 @@ import { ForecastLineChart } from './charts';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import ReactMarkdown from 'react-markdown';
+import { AnomalyDetection } from './anomaly-detection';
 
 interface ForecastDashboardProps {
   forecastData: ForecastData;
@@ -59,59 +60,67 @@ export function ForecastDashboard({ forecastData, onReconfigure }: ForecastDashb
 
 
   return (
-    <div className="pt-24 pb-16 container" ref={reportRef}>
-        <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline">
-                Predictive Analytics Dashboard
-            </h1>
-            <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                Forecasting from {params.trainingDays} days of data for the next {params.horizon}.
-            </p>
-            <div className="mt-4 flex gap-4 justify-center">
-                <Button onClick={onReconfigure}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Reconfigure
-                </Button>
-                <Button onClick={handleDownloadReport} disabled={isDownloading}>
-                    <Download className="mr-2 h-4 w-4" />
-                    {isDownloading ? 'Generating...' : 'Download Full Report (PDF)'}
-                </Button>
+    <div className="pt-24 pb-16 container">
+        <div ref={reportRef}>
+            <div className="text-center mb-12">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline">
+                    Predictive Analytics Dashboard
+                </h1>
+                <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                    Forecasting from {params.trainingDays} days of data for the next {params.horizon}.
+                </p>
+            </div>
+
+            <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <Card className="xl:col-span-4 bg-card border-border shadow-sm rounded-xl">
+                        <CardHeader>
+                            <CardTitle>Narrative Insights</CardTitle>
+                            <CardDescription>Key trends and takeaways from the forecast.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="prose prose-sm prose-invert max-w-none text-muted-foreground">
+                            <ReactMarkdown>{narrative}</ReactMarkdown>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {results.map((result) => (
+                    <Card key={result.variable} className="bg-card border-border shadow-sm rounded-xl xl:col-span-2">
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="font-bold capitalize">{result.variable}</CardTitle>
+                                    <CardDescription className="text-muted-foreground">
+                                        {result.stats.narrative}
+                                    </CardDescription>
+                                </div>
+                                <Button variant="ghost" size="icon" onClick={() => handleDownloadChart(result.variable)}>
+                                    <Download className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="h-[300px]" id={`chart-${result.variable}`}>
+                        <ForecastLineChart data={result.data} range={result.range} />
+                        </CardContent>
+                    </Card>
+                    ))}
+                </div>
+                
+                <AnomalyDetection />
+
             </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-            <Card className="xl:col-span-4 bg-card border-border shadow-sm rounded-xl">
-                <CardHeader>
-                    <CardTitle>Narrative Insights</CardTitle>
-                    <CardDescription>Key trends and takeaways from the forecast.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="prose prose-sm prose-invert max-w-none text-muted-foreground">
-                       <ReactMarkdown>{narrative}</ReactMarkdown>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {results.map((result) => (
-            <Card key={result.variable} className="bg-card border-border shadow-sm rounded-xl xl:col-span-2">
-                <CardHeader>
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <CardTitle className="font-bold capitalize">{result.variable}</CardTitle>
-                            <CardDescription className="text-muted-foreground">
-                                {result.stats.narrative}
-                            </CardDescription>
-                        </div>
-                        <Button variant="ghost" size="icon" onClick={() => handleDownloadChart(result.variable)}>
-                            <Download className="h-4 w-4" />
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent className="h-[300px]" id={`chart-${result.variable}`}>
-                   <ForecastLineChart data={result.data} range={result.range} />
-                </CardContent>
-            </Card>
-            ))}
+        
+        <div className="mt-8 flex gap-4 justify-center">
+            <Button onClick={onReconfigure}>
+                <Edit className="mr-2 h-4 w-4" />
+                Reconfigure
+            </Button>
+            <Button onClick={handleDownloadReport} disabled={isDownloading}>
+                <Download className="mr-2 h-4 w-4" />
+                {isDownloading ? 'Generating...' : 'Download Full Report (PDF)'}
+            </Button>
         </div>
     </div>
   );

@@ -20,6 +20,7 @@ const ARGO_RANGES = {
   bbp700: [0.003708, 0.024895],
   cdom: [0.25337, 0.31673],
   downwelling_par: [168.58, 226.57],
+  pressure: [20, 20],
 };
 export type ForecastVariable = keyof typeof ARGO_RANGES;
 
@@ -29,6 +30,21 @@ export type ForecastDataPoint = {
   type: 'historical' | 'forecast';
   confidence?: [number, number];
 };
+
+export type Anomaly = {
+  id: number;
+  platform_number: number;
+  date_str: string;
+  pressure: number;
+  temperature: number;
+  salinity: number;
+  oxygen_mg_per_L: number;
+  chlorophyll_mg_m3: number;
+  nitrate_uM: number;
+  pH: number;
+  anomaly_score: number; // A score from 0 to 1, where higher is more anomalous
+};
+
 
 export type ForecastResult = {
   variable: ForecastVariable;
@@ -198,4 +214,55 @@ export const generateAllForecasts = (params: ForecastParams): ForecastData => {
   const narrative = generateOverallNarrative(results, params);
 
   return { params, results, narrative };
+};
+
+
+const randomInRange = (min: number, max: number, random: () => number) => min + random() * (max - min);
+const randomDate = (start: Date, end: Date, random: () => number) => {
+    return new Date(start.getTime() + random() * (end.getTime() - start.getTime()));
+}
+
+export const generateAnomalyData = (count: number): Anomaly[] => {
+    const data: Anomaly[] = [];
+    const random = mulberry32(9876);
+    const platformIds = [2902300, 2902301, 2902302, 2902303, 2902304, 2902305, 2902306];
+    const startDate = new Date('2023-01-01');
+    const endDate = new Date('2024-05-15');
+
+    for (let i = 0; i < count; i++) {
+        const platform_number = platformIds[Math.floor(random() * platformIds.length)];
+        const date = randomDate(startDate, endDate, random);
+
+        // Make some values anomalous
+        const isAnomalous = random() > 0.8;
+        const anomalyScore = isAnomalous ? randomInRange(0.05, 0.2, random) : randomInRange(0, 0.049, random);
+
+        const createValue = (range: [number, number], outlierFactor = 3) => {
+            const shouldBeOutlier = isAnomalous && random() > 0.5;
+            if (shouldBeOutlier) {
+                const isHighOutlier = random() > 0.5;
+                const spread = (range[1] - range[0]);
+                return isHighOutlier
+                    ? range[1] + randomInRange(0, spread, random) * outlierFactor
+                    : range[0] - randomInRange(0, spread, random) * outlierFactor;
+            }
+            return randomInRange(range[0], range[1], random);
+        }
+
+        data.push({
+            id: i,
+            platform_number,
+            date_str: format(date, 'yyyy-MM-dd HH:mm:ss'),
+            pressure: 20,
+            temperature: createValue(ARGO_RANGES.temperature, 0.5),
+            salinity: createValue(ARGO_RANGES.salinity, 2),
+            oxygen_mg_per_L: createValue(ARGO_RANGES.oxygen, 1.5),
+            chlorophyll_mg_m3: createValue(ARGO_RANGES.chlorophyll, 3),
+            nitrate_uM: createValue(ARGO_RANGES.nitrate, 2),
+            pH: createValue(ARGO_RANGES.ph, 0.5),
+            anomaly_score: anomalyScore,
+        });
+    }
+
+    return data.sort((a,b) => b.anomaly_score - a.anomaly_score);
 };
