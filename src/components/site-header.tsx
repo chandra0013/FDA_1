@@ -5,14 +5,30 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { AppIcon } from '@/components/app-icon';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ChevronDown } from 'lucide-react';
+
 
 const navLinks = [
-  { href: '/discover', label: 'Discover' },
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/learn', label: 'Learn' },
   { href: '/tutorials', label: 'Tutorials' },
   { href: '/community', label: 'Community' },
 ];
+
+const discoverLinks = [
+    { href: '/discover', label: 'FloatChat' },
+    { href: '/discover/how-it-works', label: 'How It Works' },
+    { href: '/discover/product-tour', label: 'Product Tour' },
+    { href: '/discover/pricing', label: 'Pricing' },
+    { href: '/discover/developer', label: 'Developers' },
+    { href: '/discover/resources', label: 'Resources' },
+]
 
 export function SiteHeader() {
 
@@ -31,6 +47,18 @@ export function SiteHeader() {
               </span>
             </Link>
             <nav className="hidden items-center gap-4 text-sm lg:gap-6 md:flex">
+                <DropdownMenu>
+                    <DropdownMenuTrigger className="flex items-center gap-1 text-foreground/60 transition-colors hover:text-foreground/80 focus:outline-none">
+                        Discover <ChevronDown className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        {discoverLinks.map((link) => (
+                             <DropdownMenuItem key={link.href} asChild>
+                                <Link href={link.href}>{link.label}</Link>
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
