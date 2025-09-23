@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['"Space Grotesk"', 'sans-serif'],
-        headline: ['"DM Sans"', 'sans-serif'],
+        body: ['"DM Sans"', 'sans-serif'],
+        headline: ['"Space Grotesk"', 'sans-serif'],
         zalando: ['"Zalando Sans Expanded"', 'sans-serif'],
         code: ['monospace'],
       },
