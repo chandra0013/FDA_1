@@ -56,9 +56,10 @@ export function GlobeVisualization() {
         pointColor={getPointColor}
         onPointClick={handlePointClick}
         onPointHover={(point) => {
-          if (globeRef.current?.controls()) {
-            (globeRef.current.controls() as any).domElement.style.cursor = point ? 'pointer' : 'default';
-          }
+            const controls = globeRef.current?.controls() as any;
+            if (controls) {
+             controls.domElement.style.cursor = point ? 'pointer' : 'default';
+            }
         }}
       />
       {activeFloat && (
