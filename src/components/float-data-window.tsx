@@ -15,8 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ParameterChart } from './parameter-chart';
 import type { ArgoFloat } from './map-visualization';
+import { FloatIntegratedDashboard } from './float-integrated-dashboard';
 
 interface FloatDataWindowProps {
   isOpen: boolean;
@@ -48,38 +50,49 @@ export function FloatDataWindow({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] bg-card/80 glassmorphism">
+      <DialogContent className="sm:max-w-5xl bg-card/80 glassmorphism">
         <DialogHeader>
           <DialogTitle className="text-primary">Float ID: {floatData.id}</DialogTitle>
           <DialogDescription>
             {floatData.location} ({floatData.lat.toFixed(2)}°N, {floatData.lng.toFixed(2)}°E)
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div>
-            <label htmlFor="parameter-select" className="text-sm font-medium text-muted-foreground">
-              Select Parameter
-            </label>
-            <Select value={selectedParameter} onValueChange={setSelectedParameter}>
-              <SelectTrigger id="parameter-select" className="w-full mt-1">
-                <SelectValue placeholder="Select a parameter" />
-              </SelectTrigger>
-              <SelectContent>
-                {parameters.map((param) => (
-                  <SelectItem key={param.value} value={param.value}>
-                    {param.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="w-full h-[300px]">
-            <ParameterChart
-              parameter={selectedParameter}
-              platformId={parseInt(floatData.id.replace( /^\D+/g, ''), 10)}
-            />
-          </div>
-        </div>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="dashboard">Integrated Dashboard</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview">
+            <div className="space-y-4 py-4">
+              <div>
+                <label htmlFor="parameter-select" className="text-sm font-medium text-muted-foreground">
+                  Select Parameter
+                </label>
+                <Select value={selectedParameter} onValueChange={setSelectedParameter}>
+                  <SelectTrigger id="parameter-select" className="w-full mt-1">
+                    <SelectValue placeholder="Select a parameter" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {parameters.map((param) => (
+                      <SelectItem key={param.value} value={param.value}>
+                        {param.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full h-[300px]">
+                <ParameterChart
+                  parameter={selectedParameter}
+                  platformId={parseInt(floatData.id.replace( /^\D+/g, ''), 10)}
+                />
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="dashboard">
+             <FloatIntegratedDashboard floatData={floatData} />
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

@@ -21,7 +21,10 @@ import {
   RadialBarChart,
   RadialBar,
   LineChart,
-  Line
+  Line,
+  CartesianGrid,
+  BoxPlot,
+  BoxPlotProps
 } from 'recharts';
 import type { ForecastDataPoint } from '@/lib/dashboard-forecast-data';
 
@@ -40,14 +43,20 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         // Use the formatted name from the Bar/Line/etc component
         const key = p.name || p.dataKey;
         if (key !== 'payload') {
-            tooltipData[key] = p.value;
+             if (Array.isArray(p.value)) {
+                tooltipData[key] = p.value.join(', ');
+            } else if (typeof p.value === 'number') {
+                tooltipData[key] = p.value.toFixed(2);
+            } else {
+                tooltipData[key] = p.value;
+            }
         }
     });
 
     return (
       <div className="bg-card border border-border p-2 rounded-lg shadow-lg text-sm">
         {Object.entries(tooltipData).map(([key, value]) => (
-           <p key={key} className="label capitalize">{`${key}: ${typeof value === 'number' ? value.toFixed(2) : value}`}</p>
+           <p key={key} className="label capitalize">{`${key}: ${value}`}</p>
         ))}
       </div>
     );
@@ -55,6 +64,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+const CustomBoxPlot: React.FC<Omit<BoxPlotProps, 'ref'>> = (props) => {
+    return <BoxPlot {...props} />;
+}
 
 export function OceanHealthScatter({ data }: { data: any[] }) {
   const arabianSeaData = data.filter(d => d.region === 'Arabian Sea');
@@ -68,8 +80,8 @@ export function OceanHealthScatter({ data }: { data: any[] }) {
         <ZAxis type="number" dataKey="oxygen" range={[10, 200]} name="Oxygen" unit="mg/L" />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
         <Legend />
-        <Scatter name="Arabian Sea" data={arabianSeaData} fill="hsl(var(--chart-1))" shape="circle" />
-        <Scatter name="Bay of Bengal" data={bayOfBengalData} fill="hsl(var(--chart-2))" shape="triangle" />
+        <Scatter name="Arabian Sea" data={arabianSeaData} fill="hsl(var(--chart-1))" shape="circle" isAnimationActive={false} />
+        <Scatter name="Bay of Bengal" data={bayOfBengalData} fill="hsl(var(--chart-2))" shape="triangle" isAnimationActive={false} />
       </ScatterChart>
     </ResponsiveContainer>
   );
@@ -141,8 +153,8 @@ export function MonthlyTrendArea({ data }: { data: any[] }) {
                 <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" label={{ value: 'PAR (µmol photons m⁻² s⁻¹)', angle: -90, position: 'insideRight', fill: 'hsl(var(--chart-2))' }} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend />
-                <Area yAxisId="left" type="monotone" dataKey="chlorophyll" stroke="hsl(var(--chart-1))" fill="url(#colorChl)" />
-                <Area yAxisId="right" type="monotone" dataKey="par" stroke="hsl(var(--chart-2))" fill="url(#colorPar)" />
+                <Area yAxisId="left" type="monotone" dataKey="chlorophyll" stroke="hsl(var(--chart-1))" fill="url(#colorChl)" isAnimationActive={false} />
+                <Area yAxisId="right" type="monotone" dataKey="par" stroke="hsl(var(--chart-2))" fill="url(#colorPar)" isAnimationActive={false} />
             </ComposedChart>
         </ResponsiveContainer>
     );
@@ -268,8 +280,8 @@ export function ProfileCrossSection({ data }: { data: any[] }) {
                 <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-3))" />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="temperature" stroke="hsl(var(--chart-1))" dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                <Line yAxisId="right" type="monotone" dataKey="salinity" stroke="hsl(var(--chart-3))" dot={{ r: 4 }} activeDot={{ r: 6 }}/>
+                <Line yAxisId="left" type="monotone" dataKey="temperature" stroke="hsl(var(--chart-1))" dot={{ r: 4 }} activeDot={{ r: 6 }} isAnimationActive={false}/>
+                <Line yAxisId="right" type="monotone" dataKey="salinity" stroke="hsl(var(--chart-3))" dot={{ r: 4 }} activeDot={{ r: 6 }} isAnimationActive={false}/>
             </LineChart>
         </ResponsiveContainer>
     );
@@ -300,6 +312,7 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
           strokeWidth={2} 
           dot={false}
           data={data.slice(0, forecastStartIndex + 1)}
+          isAnimationActive={false}
         />
         <Line 
           type="monotone" 
@@ -310,6 +323,7 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
           strokeDasharray="5 5"
           dot={false}
           data={data.slice(forecastStartIndex)}
+          isAnimationActive={false}
         />
         <Area 
           type="monotone" 
@@ -318,12 +332,91 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
           fill="url(#confidence-band)"
           stroke="none"
           data={data.slice(forecastStartIndex)}
+          isAnimationActive={false}
         />
       </ComposedChart>
     </ResponsiveContainer>
   );
 }
 
+// Charts for Float Integrated Dashboard
 
+export function FloatBoxPlot({ data }: { data: any[] }) {
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data}>
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" domain={['dataMin - 1', 'dataMax + 1']} />
+                <Tooltip content={<CustomTooltip />} />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" />
+                <CustomBoxPlot dataKey="value" name="Temperature" fill="hsl(var(--chart-1))" stroke="hsl(var(--foreground))" />
+            </ComposedChart>
+        </ResponsiveContainer>
+    );
+}
 
-    
+export function FloatSalinityPressureScatter({ data }: { data: any[] }) {
+    const qc1 = data.filter(d => d.qc === 1);
+    const qc2 = data.filter(d => d.qc === 2);
+    const qcOther = data.filter(d => d.qc > 2);
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart>
+                <XAxis type="number" dataKey="salinity" name="Salinity" unit="PSU" stroke="hsl(var(--muted-foreground))" domain={['dataMin - 0.1', 'dataMax + 0.1']} />
+                <YAxis type="number" dataKey="pressure" name="Pressure" unit="dbar" reversed stroke="hsl(var(--muted-foreground))" />
+                <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Legend />
+                <Scatter name="Good" data={qc1} fill="hsl(var(--chart-1))" shape="circle" isAnimationActive={false} />
+                <Scatter name="Probably Good" data={qc2} fill="hsl(var(--chart-2))" shape="triangle" isAnimationActive={false} />
+                <Scatter name="Questionable" data={qcOther} fill="hsl(var(--destructive))" shape="cross" isAnimationActive={false} />
+            </ScatterChart>
+        </ResponsiveContainer>
+    );
+}
+
+export function FloatProfileDepth({ data }: { data: any[] }) {
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data}>
+                <defs>
+                    <linearGradient id="colorDepth" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--chart-3))" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="hsl(var(--chart-3))" stopOpacity={0} />
+                    </linearGradient>
+                </defs>
+                <XAxis dataKey="cycle" name="Cycle" stroke="hsl(var(--muted-foreground))" />
+                <YAxis name="Depth" unit="m" stroke="hsl(var(--muted-foreground))" domain={[1800, 2100]} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="depth" stroke="hsl(var(--chart-3))" fill="url(#colorDepth)" isAnimationActive={false} />
+            </AreaChart>
+        </ResponsiveContainer>
+    );
+}
+
+export function FloatQualityHistogram({ data }: { data: any[] }) {
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data}>
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="count" name="Count" fill="hsl(var(--chart-4))" />
+            </BarChart>
+        </ResponsiveContainer>
+    );
+}
+
+export function FloatTSDiagram({ data }: { data: any[] }) {
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart>
+                <XAxis type="number" dataKey="salinity" name="Salinity" stroke="hsl(var(--muted-foreground))" />
+                <YAxis type="number" dataKey="temperature" name="Temperature" unit="°C" stroke="hsl(var(--muted-foreground))" />
+                <ZAxis dataKey="depth" name="Depth" unit="m" range={[10, 200]} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend />
+                <Scatter name="T-S Profile" data={data} fill="hsl(var(--chart-5))" shape="circle" isAnimationActive={false} />
+            </ScatterChart>
+        </ResponsiveContainer>
+    );
+}

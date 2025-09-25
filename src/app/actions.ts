@@ -3,12 +3,19 @@
 import { providePersonalizedLearningSummary } from '@/ai/flows/provide-personalized-learning-summary';
 import { generateDataInsightsReport } from '@/ai/flows/generate-data-insights-report';
 import { generateChatResponse } from '@/ai/flows/generate-chat-response';
+import { generateFloatDashboardInsights } from '@/ai/flows/generate-float-dashboard-insights';
 
 interface AiChatResult {
     response?: string;
     reportDataUri?: string;
     error?: string;
 }
+
+interface DashboardInsightsResult {
+    insights?: string[];
+    error?: string;
+}
+
 
 export async function handleAiChat(query: string, forReport: boolean = false): Promise<AiChatResult> {
     try {
@@ -60,5 +67,18 @@ export async function handleDashboardAiChat(query: string, mode: 'descriptive' |
     } catch (e: any) {
         console.error("Dashboard AI handler error:", e);
         return { error: e.message || 'An unknown error occurred with the AI service.' };
+    }
+}
+
+export async function handleFloatDashboardInsights(floatId: string, summary: string): Promise<DashboardInsightsResult> {
+    try {
+        const result = await generateFloatDashboardInsights({
+            floatId: floatId,
+            floatDataSummary: summary,
+        });
+        return { insights: result.insights };
+    } catch (e: any) {
+        console.error("Float dashboard insights error:", e);
+        return { error: e.message || 'An unknown error occurred generating insights.' };
     }
 }
