@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, Globe } from 'lucide-react';
 
@@ -24,6 +25,7 @@ const navLinks = [
 
 const discoverLinks = [
     { href: '/discover', label: 'FloatChat' },
+    { href: '/discover/lida', label: 'Lida (Voice & Visualize)' },
     { href: '/discover/how-it-works', label: 'How It Works' },
     { href: '/discover/product-tour', label: 'Product Tour' },
     { href: '/discover/developer', label: 'Developers' },
@@ -52,7 +54,13 @@ export function SiteHeader() {
                         Discover <ChevronDown className="h-4 w-4" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        {discoverLinks.map((link) => (
+                        {discoverLinks.slice(0, 2).map((link) => (
+                             <DropdownMenuItem key={link.href} asChild>
+                                <Link href={link.href}>{link.label}</Link>
+                            </DropdownMenuItem>
+                        ))}
+                         <DropdownMenuSeparator />
+                         {discoverLinks.slice(2).map((link) => (
                              <DropdownMenuItem key={link.href} asChild>
                                 <Link href={link.href}>{link.label}</Link>
                             </DropdownMenuItem>

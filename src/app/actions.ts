@@ -4,6 +4,8 @@ import { providePersonalizedLearningSummary } from '@/ai/flows/provide-personali
 import { generateDataInsightsReport } from '@/ai/flows/generate-data-insights-report';
 import { generateChatResponse } from '@/ai/flows/generate-chat-response';
 import { generateFloatDashboardInsights } from '@/ai/flows/generate-float-dashboard-insights';
+import { generateVisualizationSuggestion, type LidaQueryResponse } from '@/ai/flows/generate-visualization-suggestion';
+
 
 interface AiChatResult {
     response?: string;
@@ -80,5 +82,14 @@ export async function handleFloatDashboardInsights(floatId: string, summary: str
     } catch (e: any) {
         console.error("Float dashboard insights error:", e);
         return { error: e.message || 'An unknown error occurred generating insights.' };
+    }
+}
+
+export async function handleLidaQuery(query: string): Promise<LidaQueryResponse> {
+    try {
+        return await generateVisualizationSuggestion({ query });
+    } catch (e: any) {
+        console.error("Lida query handler error:", e);
+        throw new Error(e.message || 'An unknown error occurred with the Lida service.');
     }
 }
