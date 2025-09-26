@@ -61,7 +61,7 @@ const chartComponents = {
   Donut: CompositionDonut,
   Scatter: OceanHealthScatter,
   HorizontalBar: KpiBars,
-  Histogram: ({data}: any) => <div className="w-full h-full flex items-center justify-center text-muted-foreground">Histogram Soon</div>
+  Histogram: BarChart
 };
 
 const SmartChart = ({

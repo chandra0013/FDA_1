@@ -400,3 +400,5 @@ export function FloatTSDiagram({ data }: { data: any[] }) {
         </ResponsiveContainer>
     );
 }
+
+export { BarChart as Histogram };
