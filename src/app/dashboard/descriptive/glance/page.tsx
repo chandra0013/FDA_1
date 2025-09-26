@@ -18,9 +18,9 @@ import {
 import {
   generateCompositionData,
   generateKpiData,
-  generateMonthlyTrendData,
   generateOceanHealthData,
 } from '@/lib/dashboard-data';
+import { generateAllForecasts, generateDistributionData } from '@/lib/dashboard-forecast-data';
 import {
   AreaChart,
   ArrowDown,
@@ -35,7 +35,7 @@ import {
   RefreshCw,
   ScatterChart,
 } from 'lucide-react';
-import { generateAllForecasts } from '@/lib/dashboard-forecast-data';
+
 
 const kpiData = [
   { title: 'Mean Temp', value: '28.1°C', delta: '+0.2°C', deltaType: 'increase' as const },
@@ -50,7 +50,7 @@ const forecastData = generateAllForecasts({ trainingDays: 100, horizon: '30d', v
 const compositionData = generateCompositionData();
 const regionalData = generateKpiData();
 const correlationData = generateOceanHealthData(120);
-const distributionData = Array.from({length: 100}, () => ({ value: 5.8 + (Math.random() - 0.5) * 0.6 }));
+const distributionData = generateDistributionData(100);
 
 
 type ChartType = 'Line' | 'Area' | 'Bar' | 'Donut' | 'Scatter' | 'HorizontalBar' | 'Histogram';
@@ -65,20 +65,62 @@ const chartComponents: { [key in ChartType]: React.ComponentType<any> } = {
   Histogram: Histogram,
 };
 
-const SmartChart = ({
-  data,
-  defaultType,
-  allowedTypes,
-}: {
-  data: any;
-  defaultType: ChartType;
-  allowedTypes: ChartType[];
-}) => {
-  const [chartType, setChartType] = useState<ChartType>(defaultType);
+// Data validation functions
+const isForecastData = (data: any): data is { data: any[], range: any } => data && Array.isArray(data.data) && data.range;
+const isCompositionData = (data: any[]): boolean => data.every(d => d.name && typeof d.value === 'number');
+const isKpiData = (data: any[]): boolean => data.every(d => d.name && typeof d.arabianSea === 'number');
+const isCorrelationData = (data: any[]): boolean => data.every(d => d.temp && d.nitrate && d.oxygen);
+const isDistributionData = (data: any[]): boolean => data.every(d => typeof d.value === 'number');
+
+const getAvailableChartTypes = (data: any): { type: ChartType, isDefault: boolean }[] => {
+    if (isForecastData(data)) {
+        return [
+            { type: 'Line', isDefault: true },
+            { type: 'Area', isDefault: false },
+            { type: 'Bar', isDefault: false },
+        ];
+    }
+    if (Array.isArray(data)) {
+        if (isCompositionData(data)) {
+            return [
+                { type: 'Donut', isDefault: true },
+                { type: 'Bar', isDefault: false },
+            ];
+        }
+        if (isKpiData(data)) {
+            return [
+                { type: 'HorizontalBar', isDefault: true },
+                { type: 'Bar', isDefault: false },
+            ];
+        }
+        if (isCorrelationData(data)) {
+            return [{ type: 'Scatter', isDefault: true }];
+        }
+        if (isDistributionData(data)) {
+             return [
+                { type: 'Histogram', isDefault: true },
+                { type: 'Bar', isDefault: false },
+            ];
+        }
+    }
+    return [];
+};
+
+
+const SmartChart = ({ data }: { data: any; }) => {
+  const availableCharts = getAvailableChartTypes(data);
+  const defaultChart = availableCharts.find(c => c.isDefault)?.type || availableCharts[0]?.type;
+  
+  const [chartType, setChartType] = useState<ChartType | undefined>(defaultChart);
+
+  if (!chartType) {
+      return <div className="flex h-full items-center justify-center text-muted-foreground">No compatible chart found for this data.</div>;
+  }
+
   const ChartComponent = chartComponents[chartType];
 
   const chartProps: any = {};
-  if (chartType === 'Line' && data?.stats) {
+  if (chartType === 'Line' && isForecastData(data)) {
       chartProps.data = data.data;
       chartProps.range = data.range;
   } else {
@@ -102,7 +144,7 @@ const SmartChart = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {allowedTypes.map((type) => (
+            {availableCharts.map(({type, isDefault}) => (
               <SelectItem key={type} value={type}>
                 <div className="flex items-center gap-2">
                   {type === 'Line' && <LineChart className="w-4 h-4" />}
@@ -113,7 +155,7 @@ const SmartChart = ({
                   {type === 'HorizontalBar' && <GitCommitHorizontal className="w-4 h-4 rotate-90" />}
                   {type === 'Histogram' && <BarChart2 className="w-4 h-4" />}
                   <span className="text-xs">{type}</span>
-                   {type === defaultType && <span className="text-xs text-primary ml-2">(Default)</span>}
+                   {isDefault && <span className="text-xs text-primary ml-2">(Default)</span>}
                 </div>
               </SelectItem>
             ))}
@@ -209,21 +251,21 @@ export default function GlancePage() {
 
         {/* Primary Tiles */}
         <ChartTile title="Time Trend" subtitle="Mean Temp (by region) with forecast band" className="col-span-6">
-            <SmartChart data={forecastData} defaultType="Line" allowedTypes={['Line', 'Area', 'Bar']} />
+            <SmartChart data={forecastData} />
         </ChartTile>
         <ChartTile title="Composition" subtitle="CO₂ Drivers Donut (hover for percent + absolute)" className="col-span-6">
-             <SmartChart data={compositionData} defaultType="Donut" allowedTypes={['Donut', 'Bar']} />
+             <SmartChart data={compositionData} />
         </ChartTile>
 
         {/* Secondary Tiles */}
          <ChartTile title="Regional Comparison" subtitle="Avg Temp by Region, last 7d" className="col-span-4">
-            <SmartChart data={regionalData} defaultType="HorizontalBar" allowedTypes={['HorizontalBar', 'Bar']} />
+            <SmartChart data={regionalData} />
         </ChartTile>
         <ChartTile title="Correlation" subtitle="Scatter Temp vs Nitrate sized by Oxygen" className="col-span-4">
-             <SmartChart data={correlationData} defaultType="Scatter" allowedTypes={['Scatter']} />
+             <SmartChart data={correlationData} />
         </ChartTile>
         <ChartTile title="Distribution" subtitle="Histogram of Oxygen with reference range" className="col-span-4">
-             <SmartChart data={distributionData} defaultType="Histogram" allowedTypes={['Histogram', 'Bar']} />
+             <SmartChart data={distributionData} />
         </ChartTile>
 
       </div>
