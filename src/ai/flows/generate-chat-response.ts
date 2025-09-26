@@ -67,7 +67,12 @@ const generateChatResponseFlow = ai.defineFlow(
     outputSchema: ArgoChatOutputSchema,
   },
   async input => {
-    const { output } = await generateChatResponsePrompt(input);
-    return output || { response: 'Sorry, I could not generate a response.' };
+    try {
+      const { output } = await generateChatResponsePrompt(input);
+      return output || { response: 'Sorry, I could not generate a response.' };
+    } catch (err) {
+      console.error('Prompt invocation failed:', err);
+      throw new Error('Model configuration error. Check model id and API key.');
+    }
   }
 );
