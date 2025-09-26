@@ -38,7 +38,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 py-4'
+        'fixed top-0 left-0 right-0 z-40 py-4'
       )}
     >
       <div className="container max-w-5xl">
