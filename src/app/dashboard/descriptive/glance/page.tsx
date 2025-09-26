@@ -103,7 +103,7 @@ const SmartChart = ({
                   {type === 'Donut' && <PieChart className="w-4 h-4" />}
                   {type === 'Scatter' && <ScatterChart className="w-4 h-4" />}
                   {type === 'HorizontalBar' && <GitCommitHorizontal className="w-4 h-4 rotate-90" />}
-                  {type === 'Histogram' && <BarChart className="w-4 h-4" />}
+                  {type === 'Histogram' && <BarChart2 className="w-4 h-4" />}
                   <span className="text-xs">{type}</span>
                    {type === defaultType && <span className="text-xs text-primary ml-2">(Default)</span>}
                 </div>
