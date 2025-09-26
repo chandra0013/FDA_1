@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A Genkit flow for generating conversational responses for the ARGO data chatbot.
@@ -32,7 +31,7 @@ const generateChatResponsePrompt = ai.definePrompt({
   name: 'generateChatResponsePrompt',
   input: { schema: ArgoChatInputSchema },
   output: { schema: ArgoChatOutputSchema },
-  model: 'gemini-pro',
+  model: 'googleai/gemini-pro',
   prompt: `You are Blue Query AI, an expert oceanographer and data analyst specializing in the ARGO float program. Your purpose is to help users understand and explore ocean data conversationally.
 
   **Instructions:**

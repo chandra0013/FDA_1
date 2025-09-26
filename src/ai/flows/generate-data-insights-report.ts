@@ -34,7 +34,7 @@ const generateReportContentPrompt = ai.definePrompt({
       keyInsights: z.array(z.string()).describe('A list of 3-5 bullet-point key insights. Be specific and bluff realistic data.'),
       recommendations: z.string().describe('A short paragraph with 1-2 recommendations for further analysis.'),
   })},
-  model: 'gemini-pro',
+  model: 'googleai/gemini-pro',
   prompt: `You are a senior oceanographic data analyst. A user has requested a report based on the following query: "{{query}}".
 
   Based on this query, generate the content for a professional PDF report. The content should include:

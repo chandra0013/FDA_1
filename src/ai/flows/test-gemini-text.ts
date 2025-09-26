@@ -15,7 +15,7 @@ export const testGenerationFlow = ai.defineFlow(
   },
   async (prompt) => {
     const { output } = await ai.generate({
-      model: 'gemini-pro',
+      model: 'googleai/gemini-pro',
       prompt: prompt,
     });
     

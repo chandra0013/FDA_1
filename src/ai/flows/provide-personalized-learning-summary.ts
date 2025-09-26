@@ -27,7 +27,7 @@ const learningSummaryPrompt = ai.definePrompt({
   name: 'learningSummaryPrompt',
   input: { schema: LearningSummaryInputSchema },
   output: { schema: LearningSummaryOutputSchema },
-  model: 'gemini-pro',
+  model: 'googleai/gemini-pro',
   prompt: `You are an AI learning assistant for Blue Query, an ocean data platform. Your goal is to help users deepen their understanding of oceanography.
 
   Based on the user's recent activity, generate a short, personalized summary of what they should focus on next.
