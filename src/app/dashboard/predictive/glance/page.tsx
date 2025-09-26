@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import {
   AreaChart as AreaChartComponent,
-  BarChart,
   ForecastLineChart,
 } from '@/components/dashboard/charts';
 import { AnomalyDetection } from '@/components/dashboard/anomaly-detection';
@@ -14,7 +13,7 @@ import {
   generateAllForecasts
 } from '@/lib/dashboard-forecast-data';
 import { ArrowDown, ArrowUp, BarChart2, TrendingUp, TrendingDown, ShieldCheck, ShieldAlert } from 'lucide-react';
-import { ResponsiveContainer, XAxis, YAxis, Bar as RechartsBar } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, BarChart, Bar as RechartsBar } from 'recharts';
 
 const forecastData = generateAllForecasts({ trainingDays: 100, horizon: '30d', variables: ['temperature', 'salinity', 'oxygen', 'chlorophyll'] });
 
@@ -142,11 +141,11 @@ export default function PredictiveGlancePage() {
         <Card className="col-span-12 xl:col-span-6 bg-card/80">
             <CardHeader><CardTitle>Trend Comparison (per day, scaled)</CardTitle></CardHeader>
             <CardContent className="h-64"><TrendComparisonChart results={forecastData.results} /></CardContent>
-        </d-card>
+        </Card>
         <Card className="col-span-12 xl-col-span-6 bg-card/80">
             <CardHeader><CardTitle>Confidence Distribution</CardTitle></CardHeader>
             <CardContent className="h-64"><ConfidenceDistributionChart results={forecastData.results} /></CardContent>
-        </d-card>
+        </Card>
 
       </div>
     </div>
