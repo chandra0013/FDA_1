@@ -14,7 +14,7 @@ import {
   generateAllForecasts
 } from '@/lib/dashboard-forecast-data';
 import { ArrowDown, ArrowUp, BarChart2, TrendingUp, TrendingDown, ShieldCheck, ShieldAlert } from 'lucide-react';
-import { ResponsiveContainer } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, Bar as RechartsBar } from 'recharts';
 
 const forecastData = generateAllForecasts({ trainingDays: 100, horizon: '30d', variables: ['temperature', 'salinity', 'oxygen', 'chlorophyll'] });
 
@@ -45,7 +45,7 @@ const TrendComparisonChart = ({ results }: { results: typeof forecastData.result
     return (
         <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical" margin={{ left: 80, right: 30 }}>
-                <Bar dataKey="trend" fill="hsl(var(--chart-4))" />
+                <RechartsBar dataKey="trend" fill="hsl(var(--chart-4))" />
                 <XAxis type="number" hide />
                 <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} width={80} />
             </BarChart>
@@ -61,7 +61,7 @@ const ConfidenceDistributionChart = ({ results }: { results: typeof forecastData
     return (
         <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data}>
-                <Bar dataKey="confidence" unit="%" fill="hsl(var(--chart-2))" />
+                <RechartsBar dataKey="confidence" unit="%" fill="hsl(var(--chart-2))" />
                 <YAxis type="number" domain={[0,100]} stroke="hsl(var(--muted-foreground))" />
                 <XAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" />
             </BarChart>
@@ -142,11 +142,11 @@ export default function PredictiveGlancePage() {
         <Card className="col-span-12 xl:col-span-6 bg-card/80">
             <CardHeader><CardTitle>Trend Comparison (per day, scaled)</CardTitle></CardHeader>
             <CardContent className="h-64"><TrendComparisonChart results={forecastData.results} /></CardContent>
-        </Card>
-        <Card className="col-span-12 xl:col-span-6 bg-card/80">
+        </d-card>
+        <Card className="col-span-12 xl-col-span-6 bg-card/80">
             <CardHeader><CardTitle>Confidence Distribution</CardTitle></CardHeader>
             <CardContent className="h-64"><ConfidenceDistributionChart results={forecastData.results} /></CardContent>
-        </Card>
+        </d-card>
 
       </div>
     </div>
