@@ -25,8 +25,7 @@ import {
   generateRadialGaugeData,
 } from '@/lib/dashboard-data';
 import { Button } from '@/components/ui/button';
-import { Download, Filter, Expand, Loader2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Download, Filter, Loader2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -43,16 +42,13 @@ const initialCharts = [
   { id: 'radial-gauges', title: 'Health Index', description: 'Baseline vs. Optimized', component: DualRadialGauges, data: generateRadialGaugeData(), layout: { x: 0, y: 4, w: 2, h: 2 } },
 ];
 
-const ChartTile = ({ chart, onExpand }: { chart: any, onExpand: (chart: any) => void }) => (
+const ChartTile = ({ chart }: { chart: any }) => (
   <Card key={chart.id} className="bg-card/80 glassmorphism flex flex-col group">
     <CardHeader className="py-2 px-3 flex-row items-center justify-between">
       <div>
         <CardTitle className="text-xs font-semibold">{chart.title}</CardTitle>
         <CardDescription className="text-xs">{chart.description}</CardDescription>
       </div>
-      <Button variant="ghost" size="icon" className="w-6 h-6" onClick={() => onExpand(chart)}>
-        <Expand className="w-3 h-3" />
-      </Button>
     </CardHeader>
     <CardContent className="p-1 flex-grow">
       <chart.component data={chart.data} />
@@ -61,7 +57,6 @@ const ChartTile = ({ chart, onExpand }: { chart: any, onExpand: (chart: any) => 
 );
 
 export default function GlancePage() {
-  const [expandedChart, setExpandedChart] = useState<any | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const layout = useMemo(() => initialCharts.map(c => ({...c.layout, i: c.id})), []);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -126,34 +121,11 @@ export default function GlancePage() {
         >
             {initialCharts.map((chart) => (
             <div key={chart.id}>
-                <ChartTile chart={chart} onExpand={setExpandedChart} />
+                <ChartTile chart={chart} />
             </div>
             ))}
         </GridLayout>
       </div>
-
-      <Dialog open={!!expandedChart} onOpenChange={(isOpen) => !isOpen && setExpandedChart(null)}>
-        <DialogContent className="max-w-4xl h-[80vh] flex flex-col p-0">
-          {expandedChart && (
-            <>
-              <DialogHeader className="p-4 border-b">
-                <DialogTitle>{expandedChart.title}</DialogTitle>
-                <DialogDescription>{expandedChart.description}</DialogDescription>
-              </DialogHeader>
-              <div className="flex-grow p-4 min-h-0">
-                <expandedChart.component data={expandedChart.data} />
-              </div>
-              <div className="p-4 border-t bg-card/50">
-                  <p className="text-sm font-semibold mb-2">Options</p>
-                  <div className="flex gap-2">
-                    <Button variant="secondary" size="sm"><Download className="mr-2 h-4 w-4"/>Save as Variant</Button>
-                     <Button variant="outline" size="sm">Reset to Default</Button>
-                  </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
