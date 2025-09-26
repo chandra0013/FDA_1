@@ -25,6 +25,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import type { ForecastDataPoint } from '@/lib/dashboard-forecast-data';
+import { useMemo } from 'react';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -401,4 +402,44 @@ export function FloatTSDiagram({ data }: { data: any[] }) {
     );
 }
 
-export { BarChart as Histogram };
+export function Histogram({ data }: { data: any[] }) {
+    const processedData = useMemo(() => {
+        if (!data || data.length === 0) return [];
+        
+        const values = data.map(d => d.value);
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const binCount = 10;
+        const binWidth = (max - min) / binCount;
+
+        const bins = Array.from({ length: binCount }, (_, i) => {
+            const binMin = min + i * binWidth;
+            const binMax = binMin + binWidth;
+            return {
+                name: `${binMin.toFixed(2)}-${binMax.toFixed(2)}`,
+                count: 0,
+            };
+        });
+
+        for (const value of values) {
+            let binIndex = Math.floor((value - min) / binWidth);
+            // handle edge case where value is exactly max
+            if (binIndex === binCount) binIndex--;
+            if(bins[binIndex]) {
+              bins[binIndex].count++;
+            }
+        }
+        return bins;
+    }, [data]);
+    
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={processedData}>
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" angle={-45} textAnchor="end" height={50} interval={0}/>
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="count" name="Frequency" fill="hsl(var(--chart-2))" />
+            </BarChart>
+        </ResponsiveContainer>
+    );
+}

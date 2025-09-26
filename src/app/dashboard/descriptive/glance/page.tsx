@@ -67,10 +67,10 @@ const chartComponents: { [key in ChartType]: React.ComponentType<any> } = {
 
 // Data validation functions
 const isForecastData = (data: any): data is { data: any[], range: any } => data && Array.isArray(data.data) && data.range;
-const isCompositionData = (data: any[]): boolean => data.every(d => d.name && typeof d.value === 'number');
-const isKpiData = (data: any[]): boolean => data.every(d => d.name && typeof d.arabianSea === 'number');
-const isCorrelationData = (data: any[]): boolean => data.every(d => d.temp && d.nitrate && d.oxygen);
-const isDistributionData = (data: any[]): boolean => data.every(d => typeof d.value === 'number');
+const isCompositionData = (data: any[]): boolean => Array.isArray(data) && data.every(d => d.name && typeof d.value === 'number');
+const isKpiData = (data: any[]): boolean => Array.isArray(data) && data.every(d => d.name && typeof d.arabianSea === 'number');
+const isCorrelationData = (data: any[]): boolean => Array.isArray(data) && data.every(d => d.temp && d.nitrate && d.oxygen);
+const isDistributionData = (data: any): boolean => Array.isArray(data) && data.every(d => typeof d.value === 'number');
 
 const getAvailableChartTypes = (data: any): { type: ChartType, isDefault: boolean }[] => {
     if (isForecastData(data)) {
@@ -113,7 +113,7 @@ const SmartChart = ({ data }: { data: any; }) => {
   
   const [chartType, setChartType] = useState<ChartType | undefined>(defaultType);
 
-  if (!chartType) {
+  if (!chartType || !chartComponents[chartType]) {
       return <div className="flex h-full items-center justify-center text-muted-foreground">No compatible chart found for this data.</div>;
   }
 
