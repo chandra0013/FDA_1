@@ -23,7 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 import { handleAiChat } from '@/app/actions';
 import { cannedResponses, type CannedResponse } from '@/lib/canned-chat-data';
-import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 
