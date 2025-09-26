@@ -58,7 +58,7 @@ export async function handleAiChat(input: ArgoChatInput): Promise<ChatResult> {
     if (query.includes('summary') || query.includes('learning')) {
        // Generate personalized learning summary
       const summaryResult: LearningSummaryOutput = await providePersonalizedLearningSummary({
-        interactionData: `User asked: "${query}"`, // Pass more context in a real app
+        interactionData: `User asked: "${query}"`,
       });
       return { response: summaryResult.summary };
     }
@@ -88,3 +88,4 @@ export async function handleDashboardAiChat(query: string, mode: 'descriptive' |
         }
     }
 }
+
