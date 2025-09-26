@@ -109,9 +109,9 @@ const getAvailableChartTypes = (data: any): { type: ChartType, isDefault: boolea
 
 const SmartChart = ({ data }: { data: any; }) => {
   const availableCharts = getAvailableChartTypes(data);
-  const defaultChart = availableCharts.find(c => c.isDefault)?.type || availableCharts[0]?.type;
+  const defaultType = availableCharts.find(c => c.isDefault)?.type;
   
-  const [chartType, setChartType] = useState<ChartType | undefined>(defaultChart);
+  const [chartType, setChartType] = useState<ChartType | undefined>(defaultType);
 
   if (!chartType) {
       return <div className="flex h-full items-center justify-center text-muted-foreground">No compatible chart found for this data.</div>;
