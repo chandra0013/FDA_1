@@ -37,6 +37,25 @@ interface DashboardChatProps {
     context?: string;
 }
 
+const predictiveCannedQueries = [
+    {
+        question: "Explain this forecast dashboard",
+        answer: "This dashboard shows AI-generated forecasts for key ocean variables. The main charts show the predicted values over the selected horizon, along with a confidence band. The 'Glance View' provides a summary of trends, confidence levels, and potential anomalies."
+    },
+    {
+        question: "What is the confidence band?",
+        answer: "The shaded area around the forecast line is the **95% confidence interval**. It represents the range within which the model expects the true value to fall. A wider band indicates higher uncertainty, often due to a shorter training period or high data variability."
+    },
+    {
+        question: "What is an anomaly?",
+        answer: "An **anomaly** is a data point that deviates significantly from what is expected. The Anomaly Detection panel uses a machine learning model to flag measurements that are statistical outliers. This can help identify potential sensor malfunctions or unusual environmental events."
+    },
+    {
+        question: "How can I improve forecast confidence?",
+        answer: "Generally, forecast confidence increases with more historical data. You can try reconfiguring the model with a **longer training period** (e.g., 100 days instead of 20). This allows the model to better learn the underlying seasonal patterns."
+    }
+];
+
 export function DashboardChat({ mode, context = "No specific context provided." }: DashboardChatProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -60,7 +79,25 @@ export function DashboardChat({ mode, context = "No specific context provided." 
     const userMessage: Message = { id: crypto.randomUUID(), role: 'user', content: query };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
+    
+    // For predictive mode, check for canned response first
+    if (mode === 'predictive') {
+        const canned = predictiveCannedQueries.find(q => q.question === query);
+        if (canned) {
+            startTransition(async () => {
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate loading
+                const assistantMessage: Message = {
+                    id: crypto.randomUUID(),
+                    role: 'assistant',
+                    content: canned.answer,
+                };
+                setMessages((prev) => [...prev, assistantMessage]);
+            });
+            return;
+        }
+    }
 
+    // Fallback to live AI for descriptive or non-canned predictive queries
     startTransition(async () => {
       const result = await handleDashboardAiChat(query, mode, context);
 
@@ -76,6 +113,25 @@ export function DashboardChat({ mode, context = "No specific context provided." 
       }
     });
   };
+
+  const renderSuggestions = () => {
+      if (mode !== 'predictive') return null;
+      return (
+          <div className="grid grid-cols-2 gap-2 p-4">
+              {predictiveCannedQueries.map(q => (
+                  <Button 
+                    key={q.question}
+                    variant="outline"
+                    className="text-xs h-auto whitespace-normal"
+                    onClick={() => handleSubmit(q.question)}
+                    disabled={isPending}
+                  >
+                      {q.question}
+                  </Button>
+              ))}
+          </div>
+      );
+  }
 
   return (
     <>
@@ -93,8 +149,9 @@ export function DashboardChat({ mode, context = "No specific context provided." 
               Ask questions about the {mode} dashboard.
             </SheetDescription>
           </SheetHeader>
-          <ScrollArea className="flex-1 p-4" ref={scrollAreaRef as any}>
-            <div className="space-y-6">
+          <ScrollArea className="flex-1" ref={scrollAreaRef as any}>
+            <div className="space-y-6 p-4">
+               {messages.length === 0 && renderSuggestions()}
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -119,6 +176,7 @@ export function DashboardChat({ mode, context = "No specific context provided." 
                     <ReactMarkdown className="prose prose-sm prose-invert max-w-none">
                       {message.content}
                     </ReactMarkdown>
+                     {message.role === 'assistant' && messages[messages.length - 1].id === message.id && renderSuggestions()}
                   </div>
                   {message.role === 'user' && (
                     <Avatar className="w-8 h-8">

@@ -10,6 +10,8 @@ import { ForecastDashboard } from '@/components/dashboard/forecast-dashboard';
 import type { ForecastData, ForecastVariable } from '@/lib/dashboard-forecast-data';
 import { generateAllForecasts } from '@/lib/dashboard-forecast-data';
 import { DashboardChat } from '@/components/dashboard/dashboard-chat';
+import Link from 'next/link';
+import { Eye } from 'lucide-react';
 
 
 const variablesToForecast: { id: ForecastVariable, label: string }[] = [
@@ -81,7 +83,7 @@ export default function PredictiveDashboardConfigPage() {
               Configure Predictive Model
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Select training parameters for ocean forecasting
+              Select training parameters for ocean forecasting. Or, explore a pre-computed forecast.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -144,14 +146,21 @@ export default function PredictiveDashboardConfigPage() {
                 ))}
               </div>
             </div>
-            
-            <Button 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
-              onClick={handleRunForecasts}
-              disabled={selectedVariables.length === 0}
-            >
-              Run Predictive Analysis
-            </Button>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 flex-1"
+                onClick={handleRunForecasts}
+                disabled={selectedVariables.length === 0}
+              >
+                Run Predictive Analysis
+              </Button>
+               <Button asChild variant="secondary" className="text-lg py-6 flex-1">
+                <Link href="/dashboard/predictive/glance">
+                  <Eye className="mr-2" /> Open Glance View
+                </Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
