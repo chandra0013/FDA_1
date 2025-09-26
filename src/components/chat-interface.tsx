@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 import { handleAiChat } from '@/app/actions';
+import { cannedResponses, type CannedResponse } from '@/lib/canned-chat-data';
 
 type Message = {
   id: string;
@@ -28,12 +29,16 @@ type Message = {
   reportDataUri?: string;
 };
 
-const sampleQueries = [
-  'What is an Argo float?',
-  'Compare BGC parameters in Arabian Sea',
-  'Find nearest ARGO floats to 15°N, 90°E',
-  'Generate a report on temperature anomalies in the North Atlantic',
-];
+// Helper function to shuffle an array
+const shuffleArray = <T>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 
 export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -41,6 +46,25 @@ export function ChatInterface() {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isCannedResponseLoading, setIsCannedResponseLoading] = useState(false);
+
+  // State for managing suggested questions
+  const [remainingQuestions, setRemainingQuestions] = useState<CannedResponse[]>(() => shuffleArray(cannedResponses));
+  const [currentSuggestions, setCurrentSuggestions] = useState<CannedResponse[]>([]);
+
+  // Function to get the next 4 suggestions
+  const getNextSuggestions = () => {
+    const availableQuestions = remainingQuestions.length < 4 ? shuffleArray(cannedResponses) : remainingQuestions;
+    const nextFour = availableQuestions.slice(0, 4);
+    setRemainingQuestions(availableQuestions.slice(4));
+    setCurrentSuggestions(nextFour);
+  };
+  
+  // Set initial suggestions
+  useEffect(() => {
+    getNextSuggestions();
+  }, []);
+
 
   const { isListening, transcript, startListening, stopListening } = useSpeechRecognition({
     onSpeechEnd: (finalTranscript) => {
@@ -65,17 +89,44 @@ export function ChatInterface() {
         behavior: 'smooth',
       });
     }
-  }, [messages]);
+  }, [messages, isCannedResponseLoading]);
+
+  const handleCannedSubmit = (question: CannedResponse) => {
+    const userMessage: Message = { id: crypto.randomUUID(), role: 'user', content: question.question };
+    setMessages((prev) => [...prev, userMessage]);
+    
+    setIsCannedResponseLoading(true);
+    
+    setTimeout(() => {
+        const assistantMessage: Message = {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: question.answer,
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        setIsCannedResponseLoading(false);
+        getNextSuggestions(); // Show new suggestions
+    }, 2000); // 2-second loading simulation
+  };
 
   const handleSubmit = (query: string) => {
-    if (!query.trim() || isPending) return;
+    if (!query.trim() || isPending || isCannedResponseLoading) return;
 
+    // Check if the query is one of our canned questions first
+    const cannedMatch = cannedResponses.find(q => q.question.toLowerCase() === query.toLowerCase());
+    if (cannedMatch) {
+      handleCannedSubmit(cannedMatch);
+      setInput('');
+      return;
+    }
+
+    // If not a canned question, proceed with AI chat
     const userMessage: Message = { id: crypto.randomUUID(), role: 'user', content: query };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
 
     startTransition(async () => {
-      const result = await handleAiChat({ query, history: messages.slice(-5) });
+      const result = await handleAiChat({ query, history: messages.slice(-5).map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', content: m.content })) });
 
       if (result.error) {
         toast({ title: 'AI Error', description: result.error, variant: 'destructive' });
@@ -88,6 +139,7 @@ export function ChatInterface() {
         };
         setMessages((prev) => [...prev, assistantMessage]);
       }
+       getNextSuggestions(); // Show new suggestions
     });
   };
 
@@ -110,14 +162,15 @@ export function ChatInterface() {
         <div className="space-y-6">
           {messages.length === 0 && (
             <div className="grid grid-cols-2 gap-2">
-              {sampleQueries.map((query) => (
+              {currentSuggestions.map((query) => (
                 <Button
-                  key={query}
+                  key={query.question}
                   variant="outline"
                   className="text-xs h-auto py-2 whitespace-normal"
-                  onClick={() => handleSubmit(query)}
+                  onClick={() => handleCannedSubmit(query)}
+                  disabled={isCannedResponseLoading}
                 >
-                  {query}
+                  {query.question}
                 </Button>
               ))}
             </div>
@@ -154,6 +207,21 @@ export function ChatInterface() {
                         </a>
                     </Button>
                 )}
+                 {message.role === 'assistant' && messages[messages.length - 1].id === message.id && (
+                   <div className="grid grid-cols-2 gap-2 pt-4">
+                      {currentSuggestions.map((query) => (
+                        <Button
+                          key={query.question}
+                          variant="outline"
+                          className="text-xs h-auto py-2 whitespace-normal"
+                          onClick={() => handleCannedSubmit(query)}
+                           disabled={isCannedResponseLoading}
+                        >
+                          {query.question}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
               </div>
               {message.role === 'user' && (
                 <Avatar className="w-8 h-8">
@@ -164,7 +232,7 @@ export function ChatInterface() {
               )}
             </div>
           ))}
-          {isPending && (
+          {(isPending || isCannedResponseLoading) && (
              <div className="flex items-start gap-3 justify-start">
                <Avatar className="w-8 h-8"><AvatarFallback className="bg-primary text-primary-foreground"><Bot size={20} /></AvatarFallback></Avatar>
               <Card className="bg-background"><CardContent className="p-3"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></CardContent></Card>
@@ -186,18 +254,18 @@ export function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={isListening ? "Listening..." : 'Ask about ocean data...'}
             className="flex-1"
-            disabled={isPending}
+            disabled={isPending || isCannedResponseLoading}
           />
           <Button
             type="button"
             size="icon"
             variant={isListening ? 'destructive' : 'outline'}
             onClick={handleVoiceClick}
-            disabled={isPending}
+            disabled={isPending || isCannedResponseLoading}
           >
             <Mic className={cn(isListening && 'text-accent animate-pulse')} />
           </Button>
-          <Button type="submit" size="icon" disabled={!input.trim() || isPending}>
+          <Button type="submit" size="icon" disabled={!input.trim() || isPending || isCannedResponseLoading}>
             <Send />
           </Button>
         </form>

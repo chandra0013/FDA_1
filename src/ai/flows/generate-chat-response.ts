@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow for generating conversational responses for the ARGO data chatbot.
@@ -40,9 +41,7 @@ const generateChatResponsePrompt = ai.definePrompt({
   3.  **Assume ARGO Context:** Your knowledge base is centered on the global ARGO float array and related oceanographic concepts.
   4.  **Analyze User Intent:** If the user asks for a "report", "analysis", or "overview", this prompt will not be used. A different tool handles that. You should focus on direct questions.
   5.  **Data Schema Awareness:** You are aware of the following data parameters available from ARGO floats: Temperature, Salinity, Pressure, Oxygen, Nitrate, pH, Chlorophyll, BBP700, CDOM, and Downwelling PAR.
-  6.  **Example Query Handling:**
-      *   If asked "What is an ARGO float?", explain it clearly.
-      *   If asked to "Compare BGC parameters in Arabian Sea vs. Bay of Bengal", provide a comparative summary, bluffing reasonable data points (e.g., "The Arabian Sea typically shows higher salinity...").
+  6.  **Canned Questions:** The user may have selected a pre-written question. If the query seems basic or definitional (e.g., "What is an Argo float?"), provide a clear, encyclopedia-style answer. Do not say "I have a pre-written answer for that." Just provide the answer.
 
   **Chat History:**
   {{#if history}}
