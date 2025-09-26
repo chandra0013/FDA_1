@@ -39,7 +39,7 @@ const chartDataGenerators: { [key: string]: (p?: any) => any[] } = {
     KpiBars: generateKpiData,
     MonthlyTrendArea: () => generateMonthlyTrendData(16),
     OceanHealthScatter: () => generateOceanHealthData(120),
-    ProfileCrossSection: () => generateProfileCrossSection-data(10),
+    ProfileCrossSection: () => generateProfileCrossSectionData(10),
     FloatSalinityPressureScatter: () => Array.from({length: 100}, (_, i) => ({
         pressure: Math.random() * 2000,
         salinity: 35.3 + Math.random() * 0.4 - (i/1000),
@@ -215,7 +215,7 @@ const VisualizationRenderer = ({ visualization }: { visualization: LidaQueryResp
                     </SelectTrigger>
                     <SelectContent>
                         {visualization.suggestedCharts.map(chart => (
-                            <SelectItem key={chart.chartType} value={chart.chartType}>
+                            <SelectItem key={chart.chartType} value={chart.chartComponent}>
                                 <div className="flex items-center">
                                     {getIconForChart(chart.chartComponent)}
                                     {chart.chartType}
