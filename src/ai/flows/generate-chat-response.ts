@@ -37,7 +37,7 @@ const generateChatResponsePrompt = ai.definePrompt({
   name: 'generateChatResponsePrompt',
   input: { schema: GenerateChatResponseInputSchema },
   output: { schema: GenerateChatResponseOutputSchema },
-  model: 'gemini-1.5-flash',
+  model: 'gemini-pro',
   prompt: `You are Blue Query AI, a specialized AI assistant for oceanographic data exploration. Your purpose is to provide accurate, data-driven, and insightful answers to users inquiring about ARGO float data, formatted in clean, readable Markdown.
 
 You have access to a dataset with the following schema and value ranges. Use this information to formulate your answers.

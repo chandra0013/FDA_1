@@ -46,7 +46,7 @@ const generateVisualizationSuggestionPrompt = ai.definePrompt({
   name: 'generateVisualizationSuggestionPrompt',
   input: { schema: LidaQueryInputSchema },
   output: { schema: LidaQueryResponseSchema },
-  model: 'gemini-1.5-flash',
+  model: 'gemini-pro',
   prompt: `You are an expert data visualization AI assistant. Your task is to analyze a user's natural language query and recommend the most effective visualizations.
 
 You must act as a LIDA (Language-based Interface for Data Analysis) model.
