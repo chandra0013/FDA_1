@@ -42,7 +42,7 @@
                                                     name: 'personalizedLearningSummaryPrompt',
                                                       input: {schema: PersonalizedLearningSummaryInputSchema},
                                                         output: {schema: PersonalizedLearningSummaryOutputSchema},
-                                                          model: 'googleai/gemini-1.5-pro-latest',
+                                                          model: 'gemini-1.5-pro',
                                                             prompt: `You are an AI assistant designed to provide personalized learning summaries.
                                                             Based on the user's interaction data, identify key areas where the user can focus their learning efforts.
                                                             Provide a concise and actionable summary of important things to focus on to improve their understanding.

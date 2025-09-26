@@ -36,7 +36,7 @@ const generateInsightsPrompt = ai.definePrompt({
   name: 'generateFloatDashboardInsightsPrompt',
   input: { schema: GenerateFloatDashboardInsightsInputSchema },
   output: { schema: GenerateFloatDashboardInsightsOutputSchema },
-  model: 'googleai/gemini-1.5-flash-latest',
+  model: 'gemini-1.5-flash',
   prompt: `You are an expert oceanographic data analyst. Based on the provided data summary for a single ARGO float, generate 3-4 concise, insightful bullet points about the float's data.
 
 Focus on:
