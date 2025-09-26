@@ -1,10 +1,9 @@
-
 {
   "placeholderImages": [
     {
       "id": "hero-background",
       "description": "An abstract visualization of ocean currents and data points.",
-      "imageUrl": "https://picsum.photos/seed/oceanus-hero/1920/1080",
+      "imageUrl": "https://images.unsplash.com/photo-1560874985-f75ca5dd942d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxvY2VhbiUyMGRhdGF8ZW58MHx8fHwxNzU4ODYyOTI5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ocean data"
     },
     {
@@ -28,31 +27,31 @@
     {
       "id": "sample-chart-1",
       "description": "A line graph showing ocean salinity over time.",
-      "imageUrl": "https://picsum.photos/seed/salinity-chart/800/600",
+      "imageUrl": "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkYXRhJTIwY2hhcnR8ZW58MHx8fHwxNzU4ODE5MzgyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "data chart"
     },
     {
       "id": "sample-chart-2",
       "description": "A depth profile chart for ocean temperature.",
-      "imageUrl": "https://picsum.photos/seed/temp-profile/800/600",
+      "imageUrl": "https://images.unsplash.com/photo-1619535541830-af170e005ef5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwY2hhcnR8ZW58MHx8fHwxNzU4ODYyOTI5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "profile chart"
     },
     {
       "id": "sample-chart-3",
       "description": "A bar chart comparing BGC parameters in different regions.",
-      "imageUrl": "https://picsum.photos/seed/bgc-chart/800/600",
+      "imageUrl": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiYXIlMjBjaGFydHxlbnwwfHx8fDE3NTg4NjI5Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "bar chart"
     },
     {
       "id": "map-visualization",
       "description": "A world map with glowing dots indicating ARGO float locations.",
-      "imageUrl": "https://picsum.photos/seed/world-map/1200/1200",
+      "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3b3JsZCUyMG1hcHxlbnwwfHx8fDE3NTg4MDA0OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "world map"
     },
     {
       "id": "learn-infographic-1",
       "description": "An infographic explaining how an ARGO float works.",
-      "imageUrl": "https://picsum.photos/seed/argo-works/800/600",
+      "imageUrl": "https://images.unsplash.com/photo-1626234736261-f50c9ff94bef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxpbmZvZ3JhcGhpYyUyMGRpYWdyYW18ZW58MHx8fHwxNzU4ODYyOTI5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "infographic diagram"
     },
     {
@@ -60,6 +59,12 @@
       "description": "A diagram showing the different sensors on an ARGO float.",
       "imageUrl": "https://ik.imagekit.io/fyttdlzz0/Gemini_Generated_Image_ctgaggctgaggctga.png?updatedAt=1758581782521",
       "imageHint": "technical diagram"
+    },
+    {
+      "id": "glance-background",
+      "description": "A dark, abstract background with subtle grid lines and glowing data points, suitable for a high-tech dashboard.",
+      "imageUrl": "https://images.unsplash.com/photo-1644325349124-d1756b79dd42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkYXRhJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NTg4NjI5Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data background"
     }
   ]
 }
