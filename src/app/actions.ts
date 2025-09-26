@@ -78,7 +78,7 @@ export async function handleDashboardAiChat(query: string, mode: 'descriptive' |
     try {
         let fullQuery = `Dashboard Mode: ${mode}. User Query: "${query}"; Context: ${context}`;
 
-        const result: ArgoChatOutput = await generateChatResponse({ query: fullQuery });
+        const result: ArgoChatOutput = await generateChatResponse({ query: fullQuery, history: [] });
         return { response: result.response };
 
     } catch (e: any)        {
