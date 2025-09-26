@@ -23,7 +23,6 @@ import {
   generateRadialGaugeData,
   generateProfileCrossSectionData
 } from '@/lib/dashboard-data';
-import { DashboardChat } from '@/components/dashboard/dashboard-chat';
 
 
 const chartComponents = [
@@ -126,7 +125,6 @@ export default function DescriptiveDashboardPage() {
           ))}
         </div>
       </div>
-      <DashboardChat mode="descriptive" />
     </>
   );
 }

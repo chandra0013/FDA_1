@@ -8,7 +8,6 @@ import { LoadingSimulation } from '@/components/dashboard/loading-simulation';
 import { ForecastDashboard } from '@/components/dashboard/forecast-dashboard';
 import type { ForecastData, ForecastVariable } from '@/lib/dashboard-forecast-data';
 import { generateAllForecasts } from '@/lib/dashboard-forecast-data';
-import { DashboardChat } from '@/components/dashboard/dashboard-chat';
 
 const variablesToForecast: { id: ForecastVariable, label: string }[] = [
   { id: 'temperature', label: 'Temperature' },
@@ -62,14 +61,6 @@ export default function PredictiveDashboardConfigPage() {
             <ForecastDashboard 
               forecastData={forecastData} 
               onReconfigure={() => setPageState('configuring')}
-            />
-            <DashboardChat 
-              mode="predictive" 
-              context={{ 
-                trainingDays: selectedDays, 
-                horizon: selectedHorizon,
-                variables: selectedVariables
-              }} 
             />
           </>;
   }
