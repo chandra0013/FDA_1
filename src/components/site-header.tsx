@@ -18,7 +18,6 @@ import { ChevronDown, Globe } from 'lucide-react';
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/globe', label: 'Globe' },
-  { href: '/discover/glance', label: 'Glance' },
   { href: '/learn', label: 'Learn' },
   { href: '/discover/pricing', label: 'Pricing' },
   { href: '/community', label: 'Community' },

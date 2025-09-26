@@ -59,12 +59,6 @@
       "description": "A diagram showing the different sensors on an ARGO float.",
       "imageUrl": "https://ik.imagekit.io/fyttdlzz0/Gemini_Generated_Image_ctgaggctgaggctga.png?updatedAt=1758581782521",
       "imageHint": "technical diagram"
-    },
-    {
-      "id": "glance-background",
-      "description": "A dark, abstract background with subtle grid lines and glowing data points, suitable for a high-tech dashboard.",
-      "imageUrl": "https://images.unsplash.com/photo-1644325349124-d1756b79dd42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkYXRhJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NTg4NjI5Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "data background"
     }
   ]
 }
