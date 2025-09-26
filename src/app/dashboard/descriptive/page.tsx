@@ -12,7 +12,7 @@ import {
 } from '@/components/dashboard/charts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Eye } from 'lucide-react';
 import {
   generateOceanHealthData,
   generateKpiData,
@@ -25,6 +25,7 @@ import {
   generateProfileCrossSectionData
 } from '@/lib/dashboard-data';
 import { DashboardChat } from '@/components/dashboard/dashboard-chat';
+import Link from 'next/link';
 
 
 const chartComponents = [
@@ -104,6 +105,13 @@ export default function DescriptiveDashboardPage() {
             <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
               Analyzing operational and scientific performance metrics.
             </p>
+             <div className="mt-6 flex justify-center">
+              <Button asChild>
+                <Link href="/dashboard/descriptive/glance">
+                  <Eye className="mr-2" /> Open Glance View
+                </Link>
+              </Button>
+            </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
