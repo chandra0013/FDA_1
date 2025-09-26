@@ -313,7 +313,7 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
           type="monotone" 
           dataKey="value" 
           name="Forecast"
-          stroke="hsl(var(--chart-1))" 
+          stroke="hsl(var(--chart-2))" 
           strokeWidth={2} 
           strokeDasharray="5 5"
           dot={false}
