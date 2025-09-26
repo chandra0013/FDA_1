@@ -119,8 +119,8 @@ const SmartChart = ({ data }: { data: any; }) => {
 
   const ChartComponent = chartComponents[chartType];
 
-  const chartProps: any = {};
-  if (chartType === 'Line' && isForecastData(data)) {
+  let chartProps: any = {};
+  if (isForecastData(data)) {
       chartProps.data = data.data;
       chartProps.range = data.range;
   } else {
