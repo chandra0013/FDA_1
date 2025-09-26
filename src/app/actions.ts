@@ -88,4 +88,3 @@ export async function handleDashboardAiChat(query: string, mode: 'descriptive' |
         }
     }
 }
-
