@@ -9,6 +9,8 @@ import {
   Mic,
   Loader2,
   Download,
+  Search,
+  BrainCircuit
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from './ui/button';
@@ -21,6 +23,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 import { handleAiChat } from '@/app/actions';
 import { cannedResponses, type CannedResponse } from '@/lib/canned-chat-data';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+
 
 type Message = {
   id: string;
@@ -28,6 +33,8 @@ type Message = {
   content: string;
   reportDataUri?: string;
 };
+
+type ChatMode = 'normal' | 'deeper';
 
 // Helper function to shuffle an array
 const shuffleArray = <T>(array: T[]): T[] => {
@@ -47,6 +54,7 @@ export function ChatInterface() {
   const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isCannedResponseLoading, setIsCannedResponseLoading] = useState(false);
+  const [chatMode, setChatMode] = useState<ChatMode>('normal');
 
   // State for managing suggested questions
   const [remainingQuestions, setRemainingQuestions] = useState<CannedResponse[]>(() => shuffleArray(cannedResponses));
@@ -106,27 +114,33 @@ export function ChatInterface() {
         setMessages((prev) => [...prev, assistantMessage]);
         setIsCannedResponseLoading(false);
         getNextSuggestions(); // Show new suggestions
-    }, 2000); // 2-second loading simulation
+    }, 1500); // loading simulation
   };
 
   const handleSubmit = (query: string) => {
     if (!query.trim() || isPending || isCannedResponseLoading) return;
 
-    // Check if the query is one of our canned questions first
-    const cannedMatch = cannedResponses.find(q => q.question.toLowerCase() === query.toLowerCase());
-    if (cannedMatch) {
-      handleCannedSubmit(cannedMatch);
-      setInput('');
-      return;
+    // In normal mode, check for canned questions first
+    if (chatMode === 'normal') {
+      const cannedMatch = cannedResponses.find(q => q.question.toLowerCase() === query.toLowerCase());
+      if (cannedMatch) {
+        handleCannedSubmit(cannedMatch);
+        setInput('');
+        return;
+      }
     }
 
-    // If not a canned question, proceed with AI chat
+    // If not a canned question or in deeper mode, proceed with AI chat
     const userMessage: Message = { id: crypto.randomUUID(), role: 'user', content: query };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
 
     startTransition(async () => {
-      const result = await handleAiChat({ query, history: messages.slice(-5).map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', content: m.content })) });
+      const result = await handleAiChat({ 
+          query, 
+          history: messages.slice(-5).map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', content: m.content })),
+          mode: chatMode 
+      });
 
       if (result.error) {
         toast({ title: 'AI Error', description: result.error, variant: 'destructive' });
@@ -139,7 +153,9 @@ export function ChatInterface() {
         };
         setMessages((prev) => [...prev, assistantMessage]);
       }
-       getNextSuggestions(); // Show new suggestions
+      if (chatMode === 'normal') {
+        getNextSuggestions(); // Show new suggestions
+      }
     });
   };
 
@@ -150,17 +166,42 @@ export function ChatInterface() {
 
   return (
     <Card className="h-full flex flex-col bg-card/80 glassmorphism">
-      <CardHeader className="text-center">
-        <div className="mx-auto bg-background p-3 rounded-full mb-2 w-fit">
-            <Bot className="w-8 h-8 text-primary" />
+      <CardHeader>
+        <div className="flex justify-between items-start">
+            <div className="text-left">
+                <CardTitle className="text-xl font-bold">Welcome to Argonaut</CardTitle>
+                <CardDescription>Ask me about ocean data or try a sample query</CardDescription>
+            </div>
+            <TooltipProvider>
+                <ToggleGroup type="single" value={chatMode} onValueChange={(value: ChatMode) => value && setChatMode(value)} aria-label="Chat Mode">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <ToggleGroupItem value="normal" aria-label="Normal Search">
+                                <Search />
+                            </ToggleGroupItem>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Normal Search: Guided Q&A and reports</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <ToggleGroupItem value="deeper" aria-label="Deeper Research">
+                                <BrainCircuit />
+                            </ToggleGroupItem>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Deeper Research: Advanced queries via external backend</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </ToggleGroup>
+            </TooltipProvider>
         </div>
-        <CardTitle className="text-xl font-bold">Welcome to Argonaut</CardTitle>
-        <CardDescription>Ask me about ocean data or try a sample query</CardDescription>
       </CardHeader>
       
       <ScrollArea className="flex-1 p-4" ref={scrollAreaRef as any}>
         <div className="space-y-6">
-          {messages.length === 0 && (
+          {messages.length === 0 && chatMode === 'normal' && (
             <div className="grid grid-cols-2 gap-2">
               {currentSuggestions.map((query) => (
                 <Button
@@ -207,7 +248,7 @@ export function ChatInterface() {
                         </a>
                     </Button>
                 )}
-                 {message.role === 'assistant' && messages[messages.length - 1].id === message.id && (
+                 {message.role === 'assistant' && messages[messages.length - 1].id === message.id && chatMode === 'normal' && (
                    <div className="grid grid-cols-2 gap-2 pt-4">
                       {currentSuggestions.map((query) => (
                         <Button
@@ -252,7 +293,7 @@ export function ChatInterface() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isListening ? "Listening..." : 'Ask about ocean data...'}
+            placeholder={isListening ? "Listening..." : chatMode === 'deeper' ? 'Ask a deeper research question...' : 'Ask about ocean data...'}
             className="flex-1"
             disabled={isPending || isCannedResponseLoading}
           />
