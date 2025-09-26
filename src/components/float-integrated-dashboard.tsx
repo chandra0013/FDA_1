@@ -10,12 +10,12 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { handleFloatDashboardInsights } from '@/app/actions';
 import {
-    FloatBoxPlot,
     FloatSalinityPressureScatter,
     FloatProfileDepth,
     FloatQualityHistogram,
     FloatTSDiagram,
 } from './dashboard/charts';
+import { BarChart, Bar } from 'recharts';
 
 interface FloatIntegratedDashboardProps {
   floatData: ArgoFloat;
@@ -35,18 +35,6 @@ const generateDashboardData = (floatId: string) => {
     const seed = parseInt(floatId.replace( /^\D+/g, ''), 10) || 123;
     const random = mulberry32(seed);
     const randomInRange = (min: number, max: number) => min + random() * (max - min);
-
-    // Temp Box Plot
-    const temperatureData = [{ 
-        name: 'Temperature', 
-        value: [
-            randomInRange(26.5, 27.2), // min
-            randomInRange(27.3, 27.7), // q1
-            randomInRange(27.8, 28.2), // median
-            randomInRange(28.3, 28.7), // q3
-            randomInRange(28.8, 29.3), // max
-        ]
-    }];
 
     // Salinity vs Pressure
     const salinityPressureData = Array.from({ length: 100 }, () => {
@@ -89,7 +77,6 @@ const generateDashboardData = (floatId: string) => {
     });
 
     return {
-        temperatureData,
         salinityPressureData,
         profileDepthData,
         qualityHistogramData,
@@ -149,7 +136,6 @@ export function FloatIntegratedDashboard({ floatData }: FloatIntegratedDashboard
   };
 
   const charts = [
-    { title: 'Temperature Profiles', component: <FloatBoxPlot data={dashboardData.temperatureData} />, caption: 'Temperature variability across 50 cycles: median 27.8 °C, interquartile range 0.9 °C.' },
     { title: 'Salinity vs. Pressure', component: <FloatSalinityPressureScatter data={dashboardData.salinityPressureData} />, caption: 'Salinity decreases slightly with depth; most measurements are good quality.' },
     { title: 'Profile Depths', component: <FloatProfileDepth data={dashboardData.profileDepthData} />, caption: 'Cycle depths stable at ~2000 m until cycle 40, then a slight decrease.' },
     { title: 'Data Quality Flags', component: <FloatQualityHistogram data={dashboardData.qualityHistogramData} />, caption: `~${dashboardData.qualityHistogramData[0].percent}% of measurements flagged good, ${dashboardData.qualityHistogramData[1].percent}% probably good.` },
@@ -159,9 +145,9 @@ export function FloatIntegratedDashboard({ floatData }: FloatIntegratedDashboard
   return (
     <div className="py-4">
         <div ref={reportRef} className="p-4 bg-card">
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {charts.map((chart, index) => (
-                    <Card key={index} className="md:col-span-3 lg:col-span-2 bg-background">
+                    <Card key={index} className="md:col-span-2 bg-background">
                         <CardHeader>
                             <CardTitle className="text-base">{chart.title}</CardTitle>
                         </CardHeader>
@@ -171,7 +157,7 @@ export function FloatIntegratedDashboard({ floatData }: FloatIntegratedDashboard
                         </CardContent>
                     </Card>
                 ))}
-                <Card className="md:col-span-6 lg:col-span-6 bg-background">
+                <Card className="md:col-span-4 bg-background">
                      <CardHeader>
                         <CardTitle className="text-base">AI Insights</CardTitle>
                     </CardHeader>

@@ -23,8 +23,6 @@ import {
   LineChart,
   Line,
   CartesianGrid,
-  BoxPlot,
-  BoxPlotProps
 } from 'recharts';
 import type { ForecastDataPoint } from '@/lib/dashboard-forecast-data';
 
@@ -63,10 +61,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   }
   return null;
 };
-
-const CustomBoxPlot: React.FC<Omit<BoxPlotProps, 'ref'>> = (props) => {
-    return <BoxPlot {...props} />;
-}
 
 export function OceanHealthScatter({ data }: { data: any[] }) {
   const arabianSeaData = data.filter(d => d.region === 'Arabian Sea');
@@ -340,20 +334,6 @@ export function ForecastLineChart({ data, range }: { data: ForecastDataPoint[], 
 }
 
 // Charts for Float Integrated Dashboard
-
-export function FloatBoxPlot({ data }: { data: any[] }) {
-    return (
-        <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={data}>
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-                <YAxis stroke="hsl(var(--muted-foreground))" domain={['dataMin - 1', 'dataMax + 1']} />
-                <Tooltip content={<CustomTooltip />} />
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" />
-                <CustomBoxPlot dataKey="value" name="Temperature" fill="hsl(var(--chart-1))" stroke="hsl(var(--foreground))" />
-            </ComposedChart>
-        </ResponsiveContainer>
-    );
-}
 
 export function FloatSalinityPressureScatter({ data }: { data: any[] }) {
     const qc1 = data.filter(d => d.qc === 1);
