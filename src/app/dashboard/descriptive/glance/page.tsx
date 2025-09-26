@@ -7,26 +7,44 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
-  AreaChart, BarChart, CompositionDonut, ForecastLineChart, KpiBars,
-  OceanHealthScatter, ProfileCrossSection,
+  AreaChart as AreaChartComponent,
+  BarChart,
+  CompositionDonut,
+  ForecastLineChart,
+  KpiBars,
+  OceanHealthScatter,
 } from '@/components/dashboard/charts';
 import {
-  generateCompositionData, generateKpiData, generateMonthlyTrendData,
-  generateOceanHealthData, generateProfileCrossSectionData
+  generateCompositionData,
+  generateKpiData,
+  generateMonthlyTrendData,
+  generateOceanHealthData,
 } from '@/lib/dashboard-data';
-import { AlertCircle, ArrowDown, ArrowUp, BarChart2, Calendar, Dot, Eye, GitCommitHorizontal, HelpCircle, LineChart, PieChart, RefreshCw, ScatterChart } from 'lucide-react';
+import {
+  AreaChart,
+  ArrowDown,
+  ArrowUp,
+  BarChart2,
+  Calendar,
+  Eye,
+  GitCommitHorizontal,
+  HelpCircle,
+  LineChart,
+  PieChart,
+  RefreshCw,
+  ScatterChart,
+} from 'lucide-react';
 import { generateAllForecasts } from '@/lib/dashboard-forecast-data';
 
 const kpiData = [
-  { title: 'Mean Temp', value: '28.1°C', delta: '+0.2°C', deltaType: 'increase' },
-  { title: 'Salinity', value: '35.4 PSU', delta: '-0.1 PSU', deltaType: 'decrease' },
-  { title: 'Oxygen', value: '5.8 mg/L', delta: '+0.05 mg/L', deltaType: 'increase' },
-  { title: 'Chlorophyll', value: '1.1 mg/m³', delta: '+5%', deltaType: 'increase' },
-  { title: 'Anomaly Rate', value: '1.2%', delta: '-0.3%', deltaType: 'decrease' },
-  { title: 'CO₂ Proxy Index', value: '89.3', delta: '+1.2', deltaType: 'increase' },
+  { title: 'Mean Temp', value: '28.1°C', delta: '+0.2°C', deltaType: 'increase' as const },
+  { title: 'Salinity', value: '35.4 PSU', delta: '-0.1 PSU', deltaType: 'decrease' as const },
+  { title: 'Oxygen', value: '5.8 mg/L', delta: '+0.05 mg/L', deltaType: 'increase' as const },
+  { title: 'Chlorophyll', value: '1.1 mg/m³', delta: '+5%', deltaType: 'increase' as const },
+  { title: 'Anomaly Rate', value: '1.2%', delta: '-0.3%', deltaType: 'decrease' as const },
+  { title: 'CO₂ Proxy Index', value: '89.3', delta: '+1.2', deltaType: 'increase' as const },
 ];
 
-const timeSeriesData = generateMonthlyTrendData(12);
 const forecastData = generateAllForecasts({ trainingDays: 100, horizon: '30d', variables: ['temperature'] }).results[0];
 const compositionData = generateCompositionData();
 const regionalData = generateKpiData();
@@ -38,7 +56,7 @@ type ChartType = 'Line' | 'Area' | 'Bar' | 'Donut' | 'Scatter' | 'HorizontalBar'
 
 const chartComponents = {
   Line: ForecastLineChart,
-  Area: AreaChart,
+  Area: AreaChartComponent,
   Bar: BarChart,
   Donut: CompositionDonut,
   Scatter: OceanHealthScatter,
