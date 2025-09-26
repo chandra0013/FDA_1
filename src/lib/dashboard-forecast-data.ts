@@ -222,6 +222,11 @@ const randomDate = (start: Date, end: Date, random: () => number) => {
     return new Date(start.getTime() + random() * (end.getTime() - start.getTime()));
 }
 
+export const generateDistributionData = (count: number) => {
+    const random = mulberry32(54321);
+    return Array.from({length: count}, () => ({ value: 5.8 + (random() - 0.5) * 0.6 }));
+}
+
 export const generateAnomalyData = (count: number): Anomaly[] => {
     const data: Anomaly[] = [];
     const random = mulberry32(9876);
