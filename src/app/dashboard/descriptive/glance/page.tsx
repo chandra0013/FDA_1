@@ -13,6 +13,7 @@ import {
   ForecastLineChart,
   KpiBars,
   OceanHealthScatter,
+  Histogram,
 } from '@/components/dashboard/charts';
 import {
   generateCompositionData,
@@ -54,14 +55,14 @@ const distributionData = Array.from({length: 100}, () => ({ value: 5.8 + (Math.r
 
 type ChartType = 'Line' | 'Area' | 'Bar' | 'Donut' | 'Scatter' | 'HorizontalBar' | 'Histogram';
 
-const chartComponents = {
+const chartComponents: { [key in ChartType]: React.ComponentType<any> } = {
   Line: ForecastLineChart,
   Area: AreaChartComponent,
   Bar: BarChart,
   Donut: CompositionDonut,
   Scatter: OceanHealthScatter,
   HorizontalBar: KpiBars,
-  Histogram: BarChart
+  Histogram: Histogram,
 };
 
 const SmartChart = ({
@@ -75,13 +76,20 @@ const SmartChart = ({
 }) => {
   const [chartType, setChartType] = useState<ChartType>(defaultType);
   const ChartComponent = chartComponents[chartType];
-  const isForecast = chartType === 'Line' && data?.stats;
+
+  const chartProps: any = {};
+  if (chartType === 'Line' && data?.stats) {
+      chartProps.data = data.data;
+      chartProps.range = data.range;
+  } else {
+      chartProps.data = data;
+  }
 
   return (
     <>
       <div className="h-full w-full">
         {ChartComponent ? (
-          <ChartComponent data={isForecast ? data.data : data} range={isForecast ? data.range : undefined} />
+          <ChartComponent {...chartProps} />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
             Chart not available
@@ -215,7 +223,7 @@ export default function GlancePage() {
              <SmartChart data={correlationData} defaultType="Scatter" allowedTypes={['Scatter']} />
         </ChartTile>
         <ChartTile title="Distribution" subtitle="Histogram of Oxygen with reference range" className="col-span-4">
-             <SmartChart data={distributionData} defaultType="Histogram" allowedTypes={['Histogram']} />
+             <SmartChart data={distributionData} defaultType="Histogram" allowedTypes={['Histogram', 'Bar']} />
         </ChartTile>
 
       </div>
